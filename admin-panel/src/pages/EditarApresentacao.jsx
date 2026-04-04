@@ -54,7 +54,7 @@ export default function EditarApresentacao() {
           endereco: item.endereco || '',
           status: item.status || 'ativo'
         });
-        setImagemPreview(item.imagemCarousel || item.imagemCard || null);
+        setImagemPreview(item.imagemCard || null);
       } catch (error) {
         console.error('Erro ao carregar apresentacao:', error);
         alert('Nao foi possivel carregar os dados da apresentacao.');
@@ -85,8 +85,7 @@ export default function EditarApresentacao() {
 
     const payload = {
       ...dados,
-      imagemCard: imagemPreview,
-      imagemCarousel: imagemPreview
+      imagemCard: imagemPreview
     };
 
     try {
