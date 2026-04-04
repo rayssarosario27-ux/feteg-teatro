@@ -367,6 +367,7 @@ app.post('/api/apresentacoes', async (req, res) => {
     duracao = '',
     genero = '',
     data = '',
+    horario = '',
     status = 'ativo',
     local = '',
     endereco = '',
@@ -387,9 +388,9 @@ app.post('/api/apresentacoes', async (req, res) => {
   try {
     const result = await pool.query(
       `INSERT INTO apresentacoes
-        (nome, classificacao, duracao, genero, data, status, local, endereco, sinopse, elenco, avisos, data_inicio, data_fim, imagem_card, imagem_carousel, imagem_carousel_posicao)
+        (nome, classificacao, duracao, genero, data, horario, status, local, endereco, sinopse, elenco, avisos, data_inicio, data_fim, imagem_card, imagem_carousel, imagem_carousel_posicao)
        VALUES
-        ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
+        ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
        RETURNING *`,
       [
         String(nome).trim(),
@@ -397,6 +398,7 @@ app.post('/api/apresentacoes', async (req, res) => {
         String(duracao),
         String(genero),
         String(data),
+        String(horario),
         String(status),
         String(local),
         String(endereco),
@@ -437,6 +439,7 @@ app.put('/api/apresentacoes/:id', async (req, res) => {
       duracao: req.body.duracao ?? base.duracao,
       genero: req.body.genero ?? base.genero,
       data: req.body.data ?? base.data,
+      horario: req.body.horario ?? base.horario,
       status: req.body.status ?? base.status,
       local: req.body.local ?? base.local,
       endereco: req.body.endereco ?? base.endereco,
@@ -457,18 +460,19 @@ app.put('/api/apresentacoes/:id', async (req, res) => {
         duracao = $3,
         genero = $4,
         data = $5,
-        status = $6,
-        local = $7,
-        endereco = $8,
-        sinopse = $9,
-        elenco = $10,
-        avisos = $11,
-        data_inicio = $12,
-        data_fim = $13,
-        imagem_card = $14,
-        imagem_carousel = $15,
-        imagem_carousel_posicao = $16
-             WHERE id = $17
+        horario = $6,
+        status = $7,
+        local = $8,
+        endereco = $9,
+        sinopse = $10,
+        elenco = $11,
+        avisos = $12,
+        data_inicio = $13,
+        data_fim = $14,
+        imagem_card = $15,
+        imagem_carousel = $16,
+        imagem_carousel_posicao = $17
+             WHERE id = $18
        RETURNING *`,
       [
         String(payload.nome),
@@ -476,6 +480,7 @@ app.put('/api/apresentacoes/:id', async (req, res) => {
         String(payload.duracao),
         String(payload.genero),
         String(payload.data),
+        String(payload.horario),
         String(payload.status),
         String(payload.local),
         String(payload.endereco),
