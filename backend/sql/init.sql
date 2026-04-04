@@ -17,6 +17,7 @@ CREATE TABLE IF NOT EXISTS apresentacoes (
   imagem_card TEXT,
   imagem_carousel TEXT,
   imagem_carousel_posicao TEXT DEFAULT '50% 50%',
+  views_count INTEGER DEFAULT 0,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );

@@ -54,7 +54,8 @@ const mapApresentacao = (row) => ({
   dataFim: row.data_fim,
   imagemCard: row.imagem_card,
   imagemCarousel: row.imagem_carousel,
-  imagemCarouselPosicao: row.imagem_carousel_posicao || '50% 50%'
+  imagemCarouselPosicao: row.imagem_carousel_posicao || '50% 50%',
+  viewsCount: row.views_count || 0
 });
 
 const mapDataFestival = (row) => ({
@@ -160,6 +161,11 @@ async function initDb() {
   await pool.query(`
     ALTER TABLE apresentacoes
     ADD COLUMN IF NOT EXISTS horario TEXT DEFAULT '';
+  `);
+
+  await pool.query(`
+    ALTER TABLE apresentacoes
+    ADD COLUMN IF NOT EXISTS views_count INTEGER DEFAULT 0;
   `);
 
   await pool.query(`
@@ -518,6 +524,28 @@ app.delete('/api/apresentacoes/:id', async (req, res) => {
   } catch (error) {
     console.error('Erro ao deletar apresentacao:', error);
     return res.status(500).json({ erro: 'falha ao deletar apresentacao' });
+  }
+});
+
+// Incrementar visualizações
+app.post('/api/apresentacoes/:id/view', async (req, res) => {
+  const id = Number(req.params.id);
+  if (!Number.isInteger(id)) {
+    return res.status(400).json({ erro: 'id invalido' });
+  }
+
+  try {
+    const result = await pool.query(
+      'UPDATE apresentacoes SET views_count = views_count + 1 WHERE id = $1 RETURNING views_count',
+      [id]
+    );
+    if (result.rowCount === 0) {
+      return res.status(404).json({ erro: 'apresentacao nao encontrada' });
+    }
+    return res.json({ viewsCount: result.rows[0].views_count });
+  } catch (error) {
+    console.error('Erro ao incrementar visualizacoes:', error);
+    return res.status(500).json({ erro: 'falha ao incrementar visualizacoes' });
   }
 });
 

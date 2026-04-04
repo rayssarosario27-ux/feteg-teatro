@@ -40,6 +40,14 @@ export default function Details() {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(lista));
         const item = lista.find((ap) => String(ap.id) === String(id));
         setShow(item || null);
+        
+        // Incrementar visualizações
+        if (item && item.id) {
+          fetch(`${API_URL}/api/apresentacoes/${item.id}/view`, {
+            method: 'POST',
+            cache: 'no-store'
+          }).catch((err) => console.error('Erro ao registrar visualização:', err));
+        }
       } catch (error) {
         console.error('Erro ao carregar detalhes da apresentacao:', error);
         fallback();
