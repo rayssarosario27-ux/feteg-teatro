@@ -1,96 +1,114 @@
 .parcerias-page {
-  padding: 40px;
+  padding: 36px;
   width: 100%;
   overflow-y: auto;
   max-height: calc(100vh - 160px);
+  background:
+    radial-gradient(circle at 14% 0%, rgba(255, 107, 0, 0.14), transparent 30%),
+    radial-gradient(circle at 88% 10%, rgba(0, 214, 201, 0.08), transparent 35%),
+    linear-gradient(150deg, #080b11 0%, #0a0e14 55%, #0f1218 100%);
 }
 
-.page-header {
-  margin-bottom: 40px;
+.parcerias-hero {
+  margin-bottom: 24px;
 }
 
-.header-content {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.parcerias-kicker {
+  margin: 0 0 8px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 11px;
+  color: #8cf8ff;
 }
 
-.page-header h1 {
-  font-size: 36px;
-  color: #fff;
+.parcerias-hero h1 {
   margin: 0;
-  font-weight: bold;
+  color: #f5f7ff;
+  font-size: 40px;
+  line-height: 1.1;
+}
+
+.parcerias-subtitle {
+  margin: 10px 0 0;
+  color: #aeb6cb;
+  font-size: 14px;
 }
 
 .form-container {
-  background: linear-gradient(135deg, #2a2a2a 0%, #1f1f1f 100%);
-  border: 1px solid #333;
-  border-radius: 12px;
-  padding: 30px;
-  margin-bottom: 40px;
+  background: linear-gradient(155deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  border-radius: 16px;
+  padding: 22px;
+  margin-bottom: 18px;
+  box-shadow: 0 16px 42px rgba(0, 0, 0, 0.35);
 }
 
 .form-container h2 {
-  color: #ff6b00;
-  margin-bottom: 20px;
+  color: #ff9d57;
+  margin: 0 0 14px;
   text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 13px;
 }
 
 .form-group {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 15px;
+  grid-template-columns: 1fr 220px auto auto;
+  gap: 10px;
+  align-items: center;
 }
 
 .form-group input,
 .form-group select {
-  background: rgba(255, 107, 0, 0.05);
-  border: 2px solid #333;
-  color: #fff;
-  padding: 12px 15px;
-  border-radius: 8px;
+  background: rgba(10, 16, 24, 0.78);
+  border: 1px solid rgba(159, 173, 204, 0.3);
+  color: #eef4ff;
+  padding: 12px 13px;
+  border-radius: 10px;
   font-size: 14px;
 }
 
 .form-group input:focus,
 .form-group select:focus {
   outline: none;
-  border-color: #ff6b00;
+  border-color: #ff7a29;
+  box-shadow: 0 0 0 3px rgba(255, 122, 41, 0.16);
 }
 
 .form-group select option {
-  background: #1f1f1f;
-  color: #fff;
+  background: #0b0f15;
+  color: #eef4ff;
 }
 
 .btn-adicionar,
 .btn-cancelar {
-  background: linear-gradient(135deg, #4caf50, #66bb6a);
-  color: #fff;
   border: none;
-  padding: 12px 25px;
-  border-radius: 8px;
+  border-radius: 10px;
+  padding: 11px 16px;
   cursor: pointer;
-  font-weight: bold;
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.8px;
   text-transform: uppercase;
-  transition: all 0.3s;
+}
+
+.btn-adicionar {
+  background: linear-gradient(120deg, #ff7a29, #ff5a1f);
+  color: #121722;
 }
 
 .btn-cancelar {
-  background: linear-gradient(135deg, #666, #555);
-}
-
-.btn-adicionar:hover,
-.btn-cancelar:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(76, 175, 80, 0.4);
+  background: rgba(159, 173, 204, 0.16);
+  color: #cfd7e8;
+  border: 1px solid rgba(159, 173, 204, 0.32);
 }
 
 .tabela-container {
-  background: linear-gradient(135deg, #2a2a2a 0%, #1f1f1f 100%);
-  border: 1px solid #333;
-  border-radius: 12px;
+  background: linear-gradient(150deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 16px;
   overflow: hidden;
+  box-shadow: 0 16px 42px rgba(0, 0, 0, 0.35);
 }
 
 .tabela-grande {
@@ -99,63 +117,93 @@
 }
 
 .tabela-grande thead {
-  background: rgba(255, 107, 0, 0.1);
-  border-bottom: 2px solid #ff6b00;
+  background: rgba(10, 16, 24, 0.88);
+  border-bottom: 1px solid rgba(255, 122, 41, 0.48);
 }
 
 .tabela-grande th {
-  padding: 18px;
+  padding: 16px;
   text-align: left;
-  color: #ff6b00;
+  color: #ff9d57;
   font-weight: 600;
   text-transform: uppercase;
+  letter-spacing: 0.9px;
+  font-size: 11px;
 }
 
 .tabela-grande td {
-  padding: 16px 18px;
-  border-bottom: 1px solid #333;
-  color: #ccc;
+  padding: 14px 16px;
+  border-bottom: 1px solid rgba(155, 171, 200, 0.14);
+  color: #d8e0f0;
+  font-size: 13px;
+}
+
+.tabela-grande tbody tr:hover {
+  background: rgba(255, 122, 41, 0.06);
 }
 
 .tipo {
   display: inline-block;
-  padding: 6px 12px;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: bold;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
 }
 
 .tipo.apoio {
-  background: rgba(33, 150, 243, 0.2);
-  color: #2196f3;
+  background: rgba(0, 214, 201, 0.16);
+  color: #76fff6;
 }
 
-.tipo.patrocínio {
-  background: rgba(255, 107, 0, 0.2);
-  color: #ff6b00;
+.tipo.patrocinio {
+  background: rgba(255, 202, 94, 0.18);
+  color: #ffd47a;
 }
 
 .btn-acao {
-  padding: 8px 14px;
+  padding: 8px 11px;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
-  font-weight: 600;
-  font-size: 12px;
+  font-weight: 700;
+  font-size: 10px;
   margin-right: 8px;
-  transition: all 0.3s;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
 }
 
 .btn-editar {
-  background: rgba(33, 150, 243, 0.2);
-  color: #2196f3;
+  background: rgba(0, 214, 201, 0.2);
+  color: #7afaf2;
 }
 
 .btn-deletar {
-  background: rgba(211, 47, 47, 0.2);
-  color: #ef5350;
+  background: rgba(250, 69, 102, 0.2);
+  color: #ff8ea2;
 }
 
-.btn-acao:hover {
-  transform: scale(1.05);
+@media (max-width: 1024px) {
+  .form-group {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .parcerias-page {
+    padding: 20px;
+  }
+
+  .parcerias-hero h1 {
+    font-size: 32px;
+  }
+
+  .form-group {
+    grid-template-columns: 1fr;
+  }
+
+  .tabela-container {
+    overflow-x: auto;
+  }
 }

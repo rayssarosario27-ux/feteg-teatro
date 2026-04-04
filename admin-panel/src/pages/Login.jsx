@@ -1,55 +1,59 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/Login.css';
+import logo from '../assets/logo.png';
 
 export default function Login() {
-  const [usuario, setUsuario] = useState('');
-  const [senha, setSenha] = useState('');
-  const [erro, setErro] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
   const handleLogin = (e) => {
     e.preventDefault();
     
-    // Credenciais: admin@feteg.com / 123456
-    if (usuario === 'admin@feteg.com' && senha === '123456') {
-      localStorage.setItem('adminToken', 'token123');
+    // Validação simples (você pode conectar com API depois)
+    if (email === 'admin@feteg.com' && password === 'admin2026') {
+      localStorage.setItem('adminToken', 'token-valido');
       navigate('/admin/dashboard');
     } else {
-      setErro('Usuário ou senha incorretos');
+      setError('Email ou senha incorretos');
     }
   };
 
   return (
     <div className="login-container">
       <div className="login-box">
-        <h1>🎭 FETEG TEATRO</h1>
-        <h2>Painel Administrativo</h2>
-        
-        {erro && <div className="erro">{erro}</div>}
-        
+        <img src={logo} alt="FETEG Logo" className="login-logo" />
+        <h1>Painel Administrativo</h1>
+        <p>FETEG Teatro</p>
+
         <form onSubmit={handleLogin}>
           <div className="form-group">
-            <label>Usuário:</label>
+            <label htmlFor="email">Email:</label>
             <input
-              type="text"
-              value={usuario}
-              onChange={(e) => setUsuario(e.target.value)}
-              placeholder="admin@feteg.com"
+              type="email"
+              id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Digite seu e-mail"
               required
             />
           </div>
 
           <div className="form-group">
-            <label>Senha:</label>
+            <label htmlFor="password">Senha:</label>
             <input
               type="password"
-              value={senha}
-              onChange={(e) => setSenha(e.target.value)}
+              id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••"
               required
             />
           </div>
+
+          {error && <p className="error-message">{error}</p>}
 
           <button type="submit" className="btn-login">
             Entrar

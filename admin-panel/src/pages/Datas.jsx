@@ -3,14 +3,21 @@ import '../styles/Datas.css';
 
 export default function Datas() {
   const [datas, setDatas] = useState([
-    { id: 1, data: '15/04/2026', evento: 'Abertura Festival', local: 'Teatro Municipal' },
-    { id: 2, data: '16/04/2026', evento: 'Romeu e Julieta', local: 'Teatro Municipal' },
-    { id: 3, data: '17/04/2026', evento: 'Cinderela', local: 'Auditório Principal' },
-    { id: 4, data: '18/04/2026', evento: 'Aladim', local: 'Teatro Popular' },
+    { id: 1, data: '2026-04-15', evento: 'Abertura Festival', local: 'Teatro Municipal' },
+    { id: 2, data: '2026-04-16', evento: 'Romeu e Julieta', local: 'Teatro Municipal' },
+    { id: 3, data: '2026-04-17', evento: 'Cinderela', local: 'Auditório Principal' },
+    { id: 4, data: '2026-04-18', evento: 'Aladim', local: 'Teatro Popular' },
   ]);
 
   const [novaData, setNovaData] = useState({ data: '', evento: '', local: '' });
   const [editando, setEditando] = useState(null);
+
+  const formatarData = (valor) => {
+    if (!valor) return '-';
+    const [ano, mes, dia] = valor.split('-');
+    if (!ano || !mes || !dia) return valor;
+    return `${dia}/${mes}/${ano}`;
+  };
 
   const handleAdd = () => {
     if (novaData.data && novaData.evento && novaData.local) {
@@ -37,20 +44,27 @@ export default function Datas() {
 
   return (
     <div className="datas-page">
-      <header className="page-header">
-        <div className="header-content">
-          <h1>📅 Datas do Festival</h1>
+      <section className="datas-hero">
+        <div>
+          <p className="datas-kicker">Agenda Inteligente</p>
+          <h1>Datas do Festival</h1>
+          <p className="datas-subtitle">Visual mais limpo, leitura rápida e controle total dos eventos.</p>
         </div>
-      </header>
+        <div className="datas-chip">{datas.length} eventos ativos</div>
+      </section>
 
       <div className="form-container">
-        <h2>{editando ? '✏️ Editar Data' : '➕ Adicionar Nova Data'}</h2>
+        <h2>{editando ? 'Editar evento' : 'Adicionar novo evento'}</h2>
         <div className="form-group">
-          <input
-            type="date"
-            value={novaData.data}
-            onChange={(e) => setNovaData({ ...novaData, data: e.target.value })}
-          />
+          <div className="date-input-shell">
+            <label htmlFor="nova-data">Data</label>
+            <input
+              id="nova-data"
+              type="date"
+              value={novaData.data}
+              onChange={(e) => setNovaData({ ...novaData, data: e.target.value })}
+            />
+          </div>
           <input
             type="text"
             value={novaData.evento}
@@ -64,14 +78,14 @@ export default function Datas() {
             placeholder="Local"
           />
           <button onClick={handleAdd} className="btn-adicionar">
-            {editando ? '✅ Salvar' : '➕ Adicionar'}
+            {editando ? 'Salvar' : 'Adicionar'}
           </button>
           {editando && (
             <button onClick={() => {
               setEditando(null);
               setNovaData({ data: '', evento: '', local: '' });
             }} className="btn-cancelar">
-              ❌ Cancelar
+              Cancelar
             </button>
           )}
         </div>
@@ -90,15 +104,15 @@ export default function Datas() {
           <tbody>
             {datas.map(d => (
               <tr key={d.id}>
-                <td>{d.data}</td>
+                <td>{formatarData(d.data)}</td>
                 <td>{d.evento}</td>
                 <td>{d.local}</td>
                 <td>
                   <button className="btn-acao btn-editar" onClick={() => handleEdit(d)}>
-                    ✏️ Editar
+                    Editar
                   </button>
                   <button className="btn-acao btn-deletar" onClick={() => handleDelete(d.id)}>
-                    🗑️ Deletar
+                    Deletar
                   </button>
                 </td>
               </tr>

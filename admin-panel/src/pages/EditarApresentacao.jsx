@@ -52,8 +52,9 @@ export default function EditarApresentacao() {
     <div className="editar-page">
       <div className="editar-container">
         <div className="editar-header">
-          <h1>✏️ {id ? 'Editar Apresentação' : 'Nova Apresentação'}</h1>
-          <p>Preencha os dados abaixo</p>
+          <p className="editar-kicker">Direcao Artistica</p>
+          <h1>{id ? 'Editar Apresentacao' : 'Nova Apresentacao'}</h1>
+          <p>Atualize informacoes da peca, agenda e material visual em um unico fluxo.</p>
         </div>
 
         <form onSubmit={handleSubmit} className="form-apresentacao">
@@ -61,7 +62,7 @@ export default function EditarApresentacao() {
           <div className="form-column">
             {/* SEÇÃO: INFORMAÇÕES BÁSICAS */}
             <div className="form-section">
-              <h2>ℹ️ Informações Básicas</h2>
+              <h2>Informacoes Basicas</h2>
               
               <div className="form-group">
                 <label>Nome da Apresentação *</label>
@@ -115,7 +116,7 @@ export default function EditarApresentacao() {
 
             {/* SEÇÃO: DESCRIÇÃO */}
             <div className="form-section">
-              <h2>📖 Descrição</h2>
+              <h2>Descricao</h2>
 
               <div className="form-group">
                 <label>Sinopse *</label>
@@ -157,7 +158,7 @@ export default function EditarApresentacao() {
           <div className="form-column">
             {/* SEÇÃO: DATAS */}
             <div className="form-section">
-              <h2>📅 Datas</h2>
+              <h2>Datas</h2>
 
               <div className="form-row">
                 <div className="form-group">
@@ -185,7 +186,7 @@ export default function EditarApresentacao() {
 
             {/* SEÇÃO: LOCALIZAÇÃO */}
             <div className="form-section">
-              <h2>📍 Localização</h2>
+              <h2>Localizacao</h2>
 
               <div className="form-group">
                 <label>Local *</label>
@@ -214,7 +215,7 @@ export default function EditarApresentacao() {
 
             {/* SEÇÃO: IMAGEM/BANNER */}
             <div className="form-section">
-              <h2>🖼️ Imagem do Banner</h2>
+              <h2>Imagem do Banner</h2>
 
               <div className="upload-container">
                 <input
@@ -225,8 +226,8 @@ export default function EditarApresentacao() {
                   style={{ display: 'none' }}
                 />
                 <label htmlFor="image-input" className="upload-label">
-                  <div className="upload-icon">📤</div>
-                  <div className="upload-text">Clique ou arraste a imagem</div>
+                  <div className="upload-icon">Upload</div>
+                  <div className="upload-text">Selecionar imagem</div>
                 </label>
                 
                 {imagemPreview && (
@@ -237,7 +238,7 @@ export default function EditarApresentacao() {
                       className="btn-remover-img"
                       onClick={() => setImagemPreview(null)}
                     >
-                      🗑️ Remover
+                      Remover
                     </button>
                   </div>
                 )}
@@ -246,7 +247,7 @@ export default function EditarApresentacao() {
 
             {/* SEÇÃO: STATUS */}
             <div className="form-section">
-              <h2>📌 Status</h2>
+              <h2>Status</h2>
 
               <div className="form-group">
                 <label>Status *</label>
@@ -263,10 +264,10 @@ export default function EditarApresentacao() {
         {/* BOTÕES */}
         <div className="form-actions">
           <button type="submit" className="btn-salvar" onClick={handleSubmit}>
-            💾 Salvar Apresentação
+            Salvar apresentacao
           </button>
           <button type="button" className="btn-cancelar" onClick={handleCancel}>
-            ❌ Cancelar
+            Cancelar
           </button>
         </div>
       </div>

@@ -118,9 +118,13 @@ export default function Apresentacoes() {
 
   return (
     <div className="apresentacoes-page">
-      <header className="page-header">
+      <header className="apresentacoes-hero">
+        <div>
+          <p className="apresentacoes-kicker">Curadoria de Conteúdo</p>
+          <h1>Apresentações</h1>
+          <p className="apresentacoes-subtitle">Gerencie peças, status e imagens com um visual mais objetivo e sofisticado.</p>
+        </div>
         <div className="header-content">
-          <h1>🎬 Apresentações</h1>
           <button className="btn-novo" onClick={handleNew}>
             + Nova Apresentação
           </button>
@@ -191,7 +195,7 @@ export default function Apresentacoes() {
                       }}
                       title="Imagem do Card"
                     >
-                      {ap.imagemCard ? '🖼️ Card' : '📤 Card'}
+                      {ap.imagemCard ? 'Card ativo' : 'Enviar card'}
                     </button>
                     <button
                       className={`btn-imagem ${ap.imagemCarousel ? 'ativo' : ''}`}
@@ -202,7 +206,7 @@ export default function Apresentacoes() {
                       }}
                       title="Imagem do Carousel"
                     >
-                      {ap.imagemCarousel ? '🎬 Carousel' : '📤 Carousel'}
+                      {ap.imagemCarousel ? 'Carrossel ativo' : 'Enviar carrossel'}
                     </button>
                   </td>
                   <td className="acoes-cell">
@@ -210,13 +214,13 @@ export default function Apresentacoes() {
                       className="btn-acao btn-editar"
                       onClick={() => handleEdit(ap.id)}
                     >
-                      ✏️ Editar
+                      Editar
                     </button>
                     <button 
                       className="btn-acao btn-deletar"
                       onClick={() => handleDelete(ap.id)}
                     >
-                      🗑️ Deletar
+                      Deletar
                     </button>
                   </td>
                 </tr>
@@ -225,7 +229,7 @@ export default function Apresentacoes() {
           </table>
         ) : (
           <div className="empty-state">
-            <p>😕 Nenhuma apresentação encontrada</p>
+            <p>Nenhuma apresentação encontrada para os filtros aplicados.</p>
           </div>
         )}
       </div>
@@ -233,7 +237,7 @@ export default function Apresentacoes() {
       {modalImagem && (
         <div className="modal-overlay" onClick={() => setModalImagem(null)}>
           <div className="modal-upload" onClick={(e) => e.stopPropagation()}>
-            <h2>📤 {tipoImagem === 'card' ? 'Imagem do Card' : 'Imagem do Carousel'}</h2>
+            <h2>{tipoImagem === 'card' ? 'Imagem do Card' : 'Imagem do Carrossel'}</h2>
             <p className="modal-subtitle">
               {getApresentacao(modalImagem)?.nome}
             </p>
@@ -255,8 +259,8 @@ export default function Apresentacoes() {
                 style={{ display: 'none' }}
               />
               <label htmlFor="file-input" className="upload-label">
-                <div className="upload-icon">📤</div>
-                <p>Clique ou arraste a imagem</p>
+                <div className="upload-icon">Upload</div>
+                <p>Selecionar imagem</p>
               </label>
 
               {imagemPreview && (
@@ -267,7 +271,7 @@ export default function Apresentacoes() {
                     className="btn-remover-img"
                     onClick={() => setImagemPreview(null)}
                   >
-                    🗑️ Remover
+                    Remover
                   </button>
                 </div>
               )}
@@ -275,10 +279,10 @@ export default function Apresentacoes() {
 
             <div className="modal-actions">
               <button className="btn-salvar" onClick={handleSalvarImagem}>
-                💾 Salvar Imagem
+                Salvar imagem
               </button>
               <button className="btn-cancelar" onClick={() => setModalImagem(null)}>
-                ❌ Cancelar
+                Cancelar
               </button>
             </div>
           </div>
