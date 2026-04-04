@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import Login from './pages/Login'
 import Layout from './components/Layout'
+import ProtectedRoute from './components/ProtectedRoute'
 import Dashboard from './pages/Dashboard'
 import Apresentacoes from './pages/Apresentacoes'
 import Datas from './pages/Datas'
@@ -12,7 +13,7 @@ function App() {
     <Router>
       <Routes>
         <Route path="/login" element={<Login />} />
-        <Route path="/admin" element={<Layout />}>
+        <Route path="/admin" element={<ProtectedRoute><Layout /></ProtectedRoute>}>
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="apresentacoes" element={<Apresentacoes />} />
           <Route path="apresentacoes/:id" element={<EditarApresentacao />} />
