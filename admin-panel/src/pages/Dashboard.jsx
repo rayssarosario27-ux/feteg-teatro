@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ConfirmDialog from '../components/ConfirmDialog';
+import { getApiBaseUrl } from '../utils/api';
 import '../styles/Dashboard.css';
 
 export default function Dashboard() {
   const navigate = useNavigate();
-  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+  const API_URL = getApiBaseUrl();
   const [apresentacoes, setApresentacoes] = useState([]);
   const [datas, setDatas] = useState([]);
   const [parcerias, setParcerias] = useState([]);

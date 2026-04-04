@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { FaInstagram, FaMapMarkerAlt, FaClock } from 'react-icons/fa';
+import { getApiBaseUrl } from '../utils/api';
 import '../styles/Details.css';
 import logo from '../assets/logo.png';
 
 export default function Details() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+  const API_URL = getApiBaseUrl();
   const STORAGE_KEY = 'feteg_apresentacoes';
   const [show, setShow] = useState(null);
 

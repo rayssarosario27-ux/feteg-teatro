@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { getApiBaseUrl } from '../utils/api';
 import '../styles/EditarApresentacao.css';
 
 export default function EditarApresentacao() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+  const API_URL = getApiBaseUrl();
   const isNovo = !id || id === 'novo';
   const [imagemPreview, setImagemPreview] = useState(null);
 
@@ -100,7 +101,10 @@ export default function EditarApresentacao() {
       });
 
       if (!resposta.ok) {
-        throw new Error(`Falha API: ${resposta.status}`);
+        const detalheErro = await resposta.text();
+        throw new Error(
+          `Falha API: ${resposta.status}${detalheErro ? ` - ${detalheErro}` : ''}`
+        );
       }
 
       alert('✅ Apresentação salva com sucesso!');
@@ -351,7 +355,7 @@ export default function EditarApresentacao() {
 
         {/* BOTÕES */}
         <div className="form-actions">
-          <button type="submit" className="btn-salvar" onClick={handleSubmit}>
+          <button type="button" className="btn-salvar" onClick={handleSubmit}>
             Salvar apresentacao
           </button>
           <button type="button" className="btn-cancelar" onClick={handleCancel}>

@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaInstagram } from 'react-icons/fa';
+import { getApiBaseUrl } from '../utils/api';
 import '../styles/Home.css';
 import logo from '../assets/logo.png';
 
 export default function Home() {
   const navigate = useNavigate();
-  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+  const API_URL = getApiBaseUrl();
   const STORAGE_KEY = 'feteg_parcerias';
   const AP_STORAGE_KEY = 'feteg_apresentacoes';
   const DATAS_STORAGE_KEY = 'feteg_datas';

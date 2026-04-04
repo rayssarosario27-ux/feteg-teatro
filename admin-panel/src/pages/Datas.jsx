@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import ConfirmDialog from '../components/ConfirmDialog';
+import { getApiBaseUrl } from '../utils/api';
 import '../styles/Datas.css';
 
 export default function Datas() {
-  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+  const API_URL = getApiBaseUrl();
   const [datas, setDatas] = useState([]);
   const [novaData, setNovaData] = useState({ data: '' });
   const [editando, setEditando] = useState(null);

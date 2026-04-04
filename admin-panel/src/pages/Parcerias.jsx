@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import ConfirmDialog from '../components/ConfirmDialog';
+import { getApiBaseUrl } from '../utils/api';
 import '../styles/Parcerias.css';
 
 export default function Parcerias() {
-  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+  const API_URL = getApiBaseUrl();
   const STORAGE_KEY = 'feteg_parcerias';
 
   const parceriasPadrao = [
