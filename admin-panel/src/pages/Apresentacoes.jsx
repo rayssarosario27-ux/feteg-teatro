@@ -189,7 +189,8 @@ export default function Apresentacoes() {
                 <th>Classificação</th>
                 <th>Duração</th>
                 <th>Gênero</th>
-                <th>Datas</th>
+                <th>Data</th>
+                <th>Horário</th>
                 <th>Status</th>
                 <th>Imagens</th>
                 <th>Ações</th>
@@ -206,6 +207,7 @@ export default function Apresentacoes() {
                   <td>{ap.duracao}</td>
                   <td>{ap.genero}</td>
                   <td>{ap.data}</td>
+                  <td>{ap.horario || '-'}</td>
                   <td>
                     <span className={`status ${ap.status}`}>
                       {ap.status}

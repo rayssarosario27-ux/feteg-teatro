@@ -5,6 +5,7 @@ CREATE TABLE IF NOT EXISTS apresentacoes (
   duracao TEXT DEFAULT '',
   genero TEXT DEFAULT '',
   data TEXT DEFAULT '',
+  horario TEXT DEFAULT '',
   status TEXT DEFAULT 'ativo',
   local TEXT DEFAULT '',
   endereco TEXT DEFAULT '',

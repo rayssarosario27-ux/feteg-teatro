@@ -43,6 +43,7 @@ const mapApresentacao = (row) => ({
   duracao: row.duracao,
   genero: row.genero,
   data: row.data,
+  horario: row.horario || '',
   status: row.status,
   local: row.local,
   endereco: row.endereco,
@@ -134,6 +135,7 @@ async function initDb() {
       duracao TEXT DEFAULT '',
       genero TEXT DEFAULT '',
       data TEXT DEFAULT '',
+      horario TEXT DEFAULT '',
       status TEXT DEFAULT 'ativo',
       local TEXT DEFAULT '',
       endereco TEXT DEFAULT '',
@@ -153,6 +155,11 @@ async function initDb() {
   await pool.query(`
     ALTER TABLE apresentacoes
     ADD COLUMN IF NOT EXISTS imagem_carousel_posicao TEXT DEFAULT '50% 50%';
+  `);
+
+  await pool.query(`
+    ALTER TABLE apresentacoes
+    ADD COLUMN IF NOT EXISTS horario TEXT DEFAULT '';
   `);
 
   await pool.query(`

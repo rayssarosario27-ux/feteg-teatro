@@ -20,6 +20,7 @@ export default function EditarApresentacao() {
     dataInicio: '2026-04-15',
     dataFim: '2026-04-20',
     data: '15',
+    horario: '',
     local: '',
     endereco: '',
     status: 'ativo'
@@ -47,6 +48,7 @@ export default function EditarApresentacao() {
           dataInicio: item.dataInicio || '2026-04-15',
           dataFim: item.dataFim || '2026-04-20',
           data: item.data || '15',
+          horario: item.horario || '',
           local: item.local || '',
           endereco: item.endereco || '',
           status: item.status || 'ativo'
@@ -235,6 +237,16 @@ export default function EditarApresentacao() {
                     onChange={handleChange}
                     placeholder="Ex: 15"
                     required
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Horário da Sessão</label>
+                  <input
+                    type="time"
+                    name="horario"
+                    value={dados.horario}
+                    onChange={handleChange}
+                    placeholder="19:30"
                   />
                 </div>
                 <div className="form-group">
