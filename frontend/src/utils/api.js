@@ -13,5 +13,5 @@ export function getApiBaseUrl() {
     }
   }
 
-  return '/api';
+  return 'https://admin-feteg.vercel.app/api';
 }
