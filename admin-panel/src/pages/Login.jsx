@@ -14,7 +14,7 @@ export default function Login() {
     
     // Validação simples (você pode conectar com API depois)
     if (email === 'admin@feteg.com' && password === 'admin2026') {
-      localStorage.setItem('adminToken', 'token-valido');
+      sessionStorage.setItem('adminToken', 'token-valido');
       navigate('/admin/dashboard');
     } else {
       setError('Email ou senha incorretos');

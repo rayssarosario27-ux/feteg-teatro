@@ -8,7 +8,7 @@ export default function Layout() {
   const location = useLocation();
 
   const handleLogout = () => {
-    localStorage.removeItem('adminToken');
+    sessionStorage.removeItem('adminToken');
     navigate('/login');
   };
 

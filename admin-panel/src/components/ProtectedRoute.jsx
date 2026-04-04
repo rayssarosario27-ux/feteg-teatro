@@ -5,7 +5,7 @@ export default function ProtectedRoute({ children }) {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
 
   useEffect(() => {
-    setIsAuthenticated(Boolean(localStorage.getItem('adminToken')));
+    setIsAuthenticated(Boolean(sessionStorage.getItem('adminToken')));
   }, []);
 
   if (isAuthenticated === null) {
