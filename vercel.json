@@ -1,19 +1,13 @@
 {
   "version": 2,
-  "builds": [
+  "projects": [
     {
-      "src": "frontend/vite.config.js",
-      "use": "@vercel/node"
-    }
-  ],
-  "rewrites": [
-    {
-      "source": "/:path((?!admin).*)",
-      "destination": "/frontend/dist/index.html"
+      "name": "feteg-frontend",
+      "rootDirectory": "frontend"
     },
     {
-      "source": "/admin/:path*",
-      "destination": "/admin-panel/dist/index.html"
+      "name": "feteg-admin",
+      "rootDirectory": "admin-panel"
     }
   ]
 }
