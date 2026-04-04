@@ -1,0 +1,161 @@
+.parcerias-page {
+  padding: 40px;
+  width: 100%;
+  overflow-y: auto;
+  max-height: calc(100vh - 160px);
+}
+
+.page-header {
+  margin-bottom: 40px;
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.page-header h1 {
+  font-size: 36px;
+  color: #fff;
+  margin: 0;
+  font-weight: bold;
+}
+
+.form-container {
+  background: linear-gradient(135deg, #2a2a2a 0%, #1f1f1f 100%);
+  border: 1px solid #333;
+  border-radius: 12px;
+  padding: 30px;
+  margin-bottom: 40px;
+}
+
+.form-container h2 {
+  color: #ff6b00;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+}
+
+.form-group {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 15px;
+}
+
+.form-group input,
+.form-group select {
+  background: rgba(255, 107, 0, 0.05);
+  border: 2px solid #333;
+  color: #fff;
+  padding: 12px 15px;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: #ff6b00;
+}
+
+.form-group select option {
+  background: #1f1f1f;
+  color: #fff;
+}
+
+.btn-adicionar,
+.btn-cancelar {
+  background: linear-gradient(135deg, #4caf50, #66bb6a);
+  color: #fff;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  text-transform: uppercase;
+  transition: all 0.3s;
+}
+
+.btn-cancelar {
+  background: linear-gradient(135deg, #666, #555);
+}
+
+.btn-adicionar:hover,
+.btn-cancelar:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(76, 175, 80, 0.4);
+}
+
+.tabela-container {
+  background: linear-gradient(135deg, #2a2a2a 0%, #1f1f1f 100%);
+  border: 1px solid #333;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.tabela-grande {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tabela-grande thead {
+  background: rgba(255, 107, 0, 0.1);
+  border-bottom: 2px solid #ff6b00;
+}
+
+.tabela-grande th {
+  padding: 18px;
+  text-align: left;
+  color: #ff6b00;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.tabela-grande td {
+  padding: 16px 18px;
+  border-bottom: 1px solid #333;
+  color: #ccc;
+}
+
+.tipo {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.tipo.apoio {
+  background: rgba(33, 150, 243, 0.2);
+  color: #2196f3;
+}
+
+.tipo.patrocínio {
+  background: rgba(255, 107, 0, 0.2);
+  color: #ff6b00;
+}
+
+.btn-acao {
+  padding: 8px 14px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 12px;
+  margin-right: 8px;
+  transition: all 0.3s;
+}
+
+.btn-editar {
+  background: rgba(33, 150, 243, 0.2);
+  color: #2196f3;
+}
+
+.btn-deletar {
+  background: rgba(211, 47, 47, 0.2);
+  color: #ef5350;
+}
+
+.btn-acao:hover {
+  transform: scale(1.05);
+}

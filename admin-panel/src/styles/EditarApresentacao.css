@@ -1,0 +1,257 @@
+.editar-page {
+  padding: 40px;
+  width: 100%;
+  overflow-y: auto;
+  max-height: calc(100vh - 160px);
+}
+
+.editar-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.editar-header {
+  margin-bottom: 40px;
+}
+
+.editar-header h1 {
+  font-size: 36px;
+  color: #fff;
+  margin-bottom: 8px;
+}
+
+.editar-header p {
+  color: #aaa;
+  font-size: 16px;
+}
+
+/* FORMULÁRIO */
+.form-apresentacao {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  margin-bottom: 40px;
+}
+
+.form-column {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+/* SEÇÕES */
+.form-section {
+  background: linear-gradient(135deg, #2a2a2a 0%, #1f1f1f 100%);
+  border: 1px solid #333;
+  border-radius: 12px;
+  padding: 25px;
+  transition: all 0.3s;
+}
+
+.form-section:hover {
+  border-color: #ff6b00;
+  box-shadow: 0 5px 20px rgba(255, 107, 0, 0.1);
+}
+
+.form-section h2 {
+  color: #ff6b00;
+  font-size: 18px;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* FORM GROUPS */
+.form-group {
+  margin-bottom: 18px;
+}
+
+.form-group:last-child {
+  margin-bottom: 0;
+}
+
+.form-group label {
+  display: block;
+  color: #fff;
+  font-weight: 600;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  background: rgba(255, 107, 0, 0.05);
+  border: 2px solid #333;
+  color: #fff;
+  padding: 12px 15px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+  transition: all 0.3s;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #ff6b00;
+  background: rgba(255, 107, 0, 0.1);
+  box-shadow: 0 0 12px rgba(255, 107, 0, 0.3);
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.form-group select option {
+  background: #1f1f1f;
+  color: #fff;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+/* UPLOAD */
+.upload-container {
+  background: rgba(255, 107, 0, 0.05);
+  border: 2px dashed #ff6b00;
+  border-radius: 10px;
+  padding: 30px;
+  text-align: center;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+
+.upload-container:hover {
+  background: rgba(255, 107, 0, 0.1);
+  border-color: #ff8c00;
+}
+
+.upload-label {
+  cursor: pointer;
+  display: block;
+}
+
+.upload-icon {
+  font-size: 48px;
+  margin-bottom: 12px;
+}
+
+.upload-text {
+  color: #ff6b00;
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.preview-box {
+  margin-top: 20px;
+  position: relative;
+  display: inline-block;
+}
+
+.preview-img {
+  max-width: 250px;
+  max-height: 250px;
+  border-radius: 10px;
+  border: 2px solid #ff6b00;
+  display: block;
+}
+
+.btn-remover-img {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: #d32f2f;
+  color: #fff;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s;
+}
+
+.btn-remover-img:hover {
+  background: #b71c1c;
+  transform: scale(1.05);
+}
+
+/* BOTÕES AÇÃO */
+.form-actions {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+}
+
+.btn-salvar,
+.btn-cancelar {
+  padding: 14px 40px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 15px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: all 0.3s;
+}
+
+.btn-salvar {
+  background: linear-gradient(135deg, #4caf50, #66bb6a);
+  color: #fff;
+  flex: 1;
+  max-width: 300px;
+}
+
+.btn-salvar:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(76, 175, 80, 0.4);
+}
+
+.btn-cancelar {
+  background: linear-gradient(135deg, #666, #555);
+  color: #fff;
+  flex: 1;
+  max-width: 300px;
+}
+
+.btn-cancelar:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(100, 100, 100, 0.4);
+}
+
+/* RESPONSIVO */
+@media (max-width: 1024px) {
+  .form-apresentacao {
+    grid-template-columns: 1fr;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .editar-page {
+    padding: 20px;
+  }
+
+  .editar-header h1 {
+    font-size: 28px;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .btn-salvar,
+  .btn-cancelar {
+    max-width: none;
+  }
+}
