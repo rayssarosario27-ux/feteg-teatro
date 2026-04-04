@@ -7,6 +7,8 @@ export default function Dashboard() {
   const navigate = useNavigate();
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
   const [apresentacoes, setApresentacoes] = useState([]);
+  const [datas, setDatas] = useState([]);
+  const [parcerias, setParcerias] = useState([]);
   const [slideAtivo, setSlideAtivo] = useState(0);
   const [publicando, setPublicando] = useState(false);
   const [ultimaPublicacao, setUltimaPublicacao] = useState(null);
@@ -33,6 +35,42 @@ export default function Dashboard() {
     };
 
     carregarApresentacoes();
+  }, [API_URL]);
+
+  useEffect(() => {
+    const carregarDatas = async () => {
+      try {
+        const resposta = await fetch(`${API_URL}/api/datas`, { cache: 'no-store' });
+        if (!resposta.ok) {
+          throw new Error(`Falha API: ${resposta.status}`);
+        }
+        const dados = await resposta.json();
+        setDatas(Array.isArray(dados) ? dados : []);
+      } catch (error) {
+        console.error('Erro ao carregar datas:', error);
+        setDatas([]);
+      }
+    };
+
+    carregarDatas();
+  }, [API_URL]);
+
+  useEffect(() => {
+    const carregarParcerias = async () => {
+      try {
+        const resposta = await fetch(`${API_URL}/api/parcerias`, { cache: 'no-store' });
+        if (!resposta.ok) {
+          throw new Error(`Falha API: ${resposta.status}`);
+        }
+        const dados = await resposta.json();
+        setParcerias(Array.isArray(dados) ? dados : []);
+      } catch (error) {
+        console.error('Erro ao carregar parcerias:', error);
+        setParcerias([]);
+      }
+    };
+
+    carregarParcerias();
   }, [API_URL]);
 
   useEffect(() => {
@@ -220,7 +258,7 @@ export default function Dashboard() {
           <div className="stat-card-icon">🎬</div>
           <div className="stat-card-body">
             <p className="stat-label">Apresentações</p>
-            <h3 className="stat-value">3</h3>
+            <h3 className="stat-value">{apresentacoes.length}</h3>
             <span className="stat-desc">ativas</span>
           </div>
           <div className="stat-card-arrow">→</div>
@@ -230,7 +268,7 @@ export default function Dashboard() {
           <div className="stat-card-icon">📅</div>
           <div className="stat-card-body">
             <p className="stat-label">Datas</p>
-            <h3 className="stat-value">6</h3>
+            <h3 className="stat-value">{datas.length}</h3>
             <span className="stat-desc">dias programados</span>
           </div>
           <div className="stat-card-arrow">→</div>
@@ -240,7 +278,7 @@ export default function Dashboard() {
           <div className="stat-card-icon">🤝</div>
           <div className="stat-card-body">
             <p className="stat-label">Parcerias</p>
-            <h3 className="stat-value">12</h3>
+            <h3 className="stat-value">{parcerias.length}</h3>
             <span className="stat-desc">apoiadores</span>
           </div>
           <div className="stat-card-arrow">→</div>
