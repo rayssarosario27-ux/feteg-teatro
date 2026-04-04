@@ -1,50 +1,47 @@
-import React, { useState, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import ConfirmDialog from '../components/ConfirmDialog';
 import '../styles/Apresentacoes.css';
 
 export default function Apresentacoes() {
   const navigate = useNavigate();
-  const [apresentacoes, setApresentacoes] = useState([
-    { 
-      id: 1, 
-      nome: 'Romeu e Julieta', 
-      classificacao: '12 anos',
-      duracao: '120m',
-      genero: 'Drama, Romance',
-      data: '15-20 abr',
-      status: 'ativo'
-      ,imagemCard: null,
-      imagemCarousel: null
-    },
-    { 
-      id: 2, 
-      nome: 'Cinderela', 
-      classificacao: 'L',
-      duracao: '100m',
-      genero: 'Infantil, Fantasia',
-      data: 'Jun-Jul',
-      status: 'ativo'
-      ,imagemCard: null,
-      imagemCarousel: null
-    },
-    { 
-      id: 3, 
-      nome: 'Aladim', 
-      classificacao: '10 anos',
-      duracao: '110m',
-      genero: 'Aventura, Fantasia',
-      data: 'Agosto',
-      status: 'rascunho'
-      ,imagemCard: null,
-      imagemCarousel: null
-    }
-  ]);
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+  const [apresentacoes, setApresentacoes] = useState([]);
 
   const [pesquisa, setPesquisa] = useState('');
   const [statusFiltro, setStatusFiltro] = useState('todos');
   const [modalImagem, setModalImagem] = useState(null);
   const [tipoImagem, setTipoImagem] = useState('card');
   const [imagemPreview, setImagemPreview] = useState(null);
+  const [ajusteCarouselY, setAjusteCarouselY] = useState(50);
+  const [confirmDialog, setConfirmDialog] = useState({ isOpen: false, deleteId: null });
+
+  const extrairPosicaoY = (posicao) => {
+    const valor = String(posicao || '').trim();
+    const match = valor.match(/\s(\d{1,3})%$/);
+    if (!match) return 50;
+    const numero = Number(match[1]);
+    if (Number.isNaN(numero)) return 50;
+    return Math.min(100, Math.max(0, numero));
+  };
+
+  useEffect(() => {
+    const carregarApresentacoes = async () => {
+      try {
+        const resposta = await fetch(`${API_URL}/api/apresentacoes`);
+        if (!resposta.ok) {
+          throw new Error(`Falha API: ${resposta.status}`);
+        }
+        const dados = await resposta.json();
+        setApresentacoes(Array.isArray(dados) ? dados : []);
+      } catch (error) {
+        console.error('Erro ao carregar apresentacoes:', error);
+        setApresentacoes([]);
+      }
+    };
+
+    carregarApresentacoes();
+  }, [API_URL]);
 
   const apresentacoesFiltradas = useMemo(() => {
     return apresentacoes.filter(ap => {
@@ -65,35 +62,64 @@ export default function Apresentacoes() {
     }
   };
 
-  const handleSalvarImagem = () => {
+  const handleSalvarImagem = async () => {
     if (imagemPreview && modalImagem) {
-      const novasApresentacoes = apresentacoes.map(ap => {
-        if (ap.id === modalImagem) {
-          if (tipoImagem === 'card') {
-            return { ...ap, imagemCard: imagemPreview };
-          }
-          return { ...ap, imagemCarousel: imagemPreview };
+      const alvo = apresentacoes.find((ap) => ap.id === modalImagem);
+      if (!alvo) return;
+
+      const payload = {
+        ...(tipoImagem === 'card'
+          ? { imagemCard: imagemPreview }
+          : {
+              imagemCarousel: imagemPreview,
+              imagemCarouselPosicao: `50% ${ajusteCarouselY}%`
+            })
+      };
+
+      try {
+        const resposta = await fetch(`${API_URL}/api/apresentacoes/${modalImagem}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        if (!resposta.ok) {
+          throw new Error(`Falha API: ${resposta.status}`);
         }
-        return ap;
-      });
 
-      setApresentacoes(novasApresentacoes);
+        const atualizado = await resposta.json();
+        setApresentacoes((atual) =>
+          atual.map((ap) => (ap.id === modalImagem ? atualizado : ap))
+        );
 
-      novasApresentacoes.forEach(ap => {
-        localStorage.setItem(`ap_${ap.id}_data`, JSON.stringify(ap));
-      });
-
-      setModalImagem(null);
-      setImagemPreview(null);
-      alert('✅ Imagem salva com sucesso!');
+        setModalImagem(null);
+        setImagemPreview(null);
+        alert('✅ Imagem salva com sucesso!');
+      } catch (error) {
+        console.error('Erro ao salvar imagem:', error);
+        alert('Nao foi possivel salvar a imagem no servidor.');
+      }
     }
   };
 
-  const handleDelete = (id) => {
-    if (window.confirm('Tem certeza que deseja deletar?')) {
-      const novasApresentacoes = apresentacoes.filter(ap => ap.id !== id);
-      setApresentacoes(novasApresentacoes);
-      localStorage.removeItem(`ap_${id}_data`);
+  const handleDelete = async (id) => {
+    setConfirmDialog({ isOpen: true, deleteId: id });
+  };
+
+  const confirmarDelete = async () => {
+    const id = confirmDialog.deleteId;
+    setConfirmDialog({ isOpen: false, deleteId: null });
+    try {
+      const resposta = await fetch(`${API_URL}/api/apresentacoes/${id}`, {
+        method: 'DELETE'
+      });
+      if (!resposta.ok) {
+        throw new Error(`Falha API: ${resposta.status}`);
+      }
+      setApresentacoes((atual) => atual.filter((ap) => ap.id !== id));
+    } catch (error) {
+      console.error('Erro ao deletar apresentacao:', error);
+      alert('Nao foi possivel deletar a apresentacao.');
     }
   };
 
@@ -192,6 +218,7 @@ export default function Apresentacoes() {
                         setModalImagem(ap.id);
                         setTipoImagem('card');
                         setImagemPreview(null);
+                        setAjusteCarouselY(50);
                       }}
                       title="Imagem do Card"
                     >
@@ -202,7 +229,8 @@ export default function Apresentacoes() {
                       onClick={() => {
                         setModalImagem(ap.id);
                         setTipoImagem('carousel');
-                        setImagemPreview(null);
+                        setImagemPreview(ap.imagemCarousel || null);
+                        setAjusteCarouselY(extrairPosicaoY(ap.imagemCarouselPosicao));
                       }}
                       title="Imagem do Carousel"
                     >
@@ -265,7 +293,30 @@ export default function Apresentacoes() {
 
               {imagemPreview && (
                 <div className="preview-box">
-                  <img src={imagemPreview} alt="Preview" className="preview-img" />
+                  <img
+                    src={imagemPreview}
+                    alt="Preview"
+                    className="preview-img"
+                    style={tipoImagem === 'carousel' ? { objectPosition: `50% ${ajusteCarouselY}%` } : undefined}
+                  />
+
+                  {tipoImagem === 'carousel' && (
+                    <div className="carousel-ajuste-box">
+                      <label htmlFor="ajuste-carousel-y" className="carousel-ajuste-label">
+                        Ajuste vertical da imagem: <strong>{ajusteCarouselY}%</strong>
+                      </label>
+                      <input
+                        id="ajuste-carousel-y"
+                        type="range"
+                        min="0"
+                        max="100"
+                        value={ajusteCarouselY}
+                        onChange={(e) => setAjusteCarouselY(Number(e.target.value))}
+                        className="carousel-ajuste-range"
+                      />
+                    </div>
+                  )}
+
                   <button
                     type="button"
                     className="btn-remover-img"
@@ -288,6 +339,14 @@ export default function Apresentacoes() {
           </div>
         </div>
       )}
+
+      <ConfirmDialog
+        isOpen={confirmDialog.isOpen}
+        title="Deletar Apresentação?"
+        message="Esta ação é irreversível. A apresentação será removida permanentemente do sistema."
+        onConfirm={confirmarDelete}
+        onCancel={() => setConfirmDialog({ isOpen: false, deleteId: null })}
+      />
     </div>
   );
 }

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import ConfirmDialog from '../components/ConfirmDialog';
 import '../styles/Parcerias.css';
 
 export default function Parcerias() {
@@ -29,13 +30,13 @@ export default function Parcerias() {
 
   const [parcerias, setParcerias] = useState([]);
   const [carregando, setCarregando] = useState(true);
-
   const [novaParc, setNovaParc] = useState({ nome: '', tipo: 'Apoio' });
   const [editando, setEditando] = useState(null);
+  const [confirmDialog, setConfirmDialog] = useState({ isOpen: false, deleteId: null });
 
   const carregarParcerias = async () => {
     try {
-      const resp = await fetch(`${API_URL}/api/parcerias`);
+      const resp = await fetch(`${API_URL}/api/parcerias`, { cache: 'no-store' });
       if (!resp.ok) {
         throw new Error(`Falha API: ${resp.status}`);
       }
@@ -62,6 +63,7 @@ export default function Parcerias() {
       if (editando) {
         const resposta = await fetch(`${API_URL}/api/parcerias/${editando}`, {
           method: 'PUT',
+          cache: 'no-store',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(novaParc)
         });
@@ -72,6 +74,7 @@ export default function Parcerias() {
       } else {
         const resposta = await fetch(`${API_URL}/api/parcerias`, {
           method: 'POST',
+          cache: 'no-store',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(novaParc)
         });
@@ -102,20 +105,24 @@ export default function Parcerias() {
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm('Deletar esta parceria?')) {
-      try {
-        const resposta = await fetch(`${API_URL}/api/parcerias/${id}`, { method: 'DELETE' });
-        if (!resposta.ok) {
-          throw new Error(`Falha API: ${resposta.status}`);
-        }
-        carregarParcerias();
-      } catch (error) {
-        console.error('Erro ao deletar parceria:', error);
+    setConfirmDialog({ isOpen: true, deleteId: id });
+  };
 
-        const atualizado = lerLocal().filter((p) => p.id !== id);
-        setParcerias(atualizado);
-        salvarLocal(atualizado);
+  const confirmarDelete = async () => {
+    const id = confirmDialog.deleteId;
+    setConfirmDialog({ isOpen: false, deleteId: null });
+    try {
+      const resposta = await fetch(`${API_URL}/api/parcerias/${id}`, { method: 'DELETE', cache: 'no-store' });
+      if (!resposta.ok) {
+        throw new Error(`Falha API: ${resposta.status}`);
       }
+      carregarParcerias();
+    } catch (error) {
+      console.error('Erro ao deletar parceria:', error);
+
+      const atualizado = lerLocal().filter((p) => p.id !== id);
+      setParcerias(atualizado);
+      salvarLocal(atualizado);
     }
   };
 
@@ -133,7 +140,7 @@ export default function Parcerias() {
       <header className="parcerias-hero">
         <div>
           <p className="parcerias-kicker">Rede Institucional</p>
-          <h1>Apoios e Patrocínios</h1>
+          <h1>Apoios, Patrocínios e Realização</h1>
           <p className="parcerias-subtitle">Organize parceiros com clareza e mantenha a vitrine institucional sempre atualizada.</p>
         </div>
       </header>
@@ -153,6 +160,7 @@ export default function Parcerias() {
           >
             <option>Apoio</option>
             <option>Patrocínio</option>
+            <option>Realização</option>
           </select>
           <button onClick={handleAdd} className="btn-adicionar">
             {editando ? 'Salvar' : 'Adicionar'}
@@ -203,6 +211,14 @@ export default function Parcerias() {
           </tbody>
         </table>
       </div>
+
+      <ConfirmDialog
+        isOpen={confirmDialog.isOpen}
+        title="Deletar Parceria?"
+        message="Esta ação é irreversível. A parceria será removida permanentemente do sistema."
+        onConfirm={confirmarDelete}
+        onCancel={() => setConfirmDialog({ isOpen: false, deleteId: null })}
+      />
     </div>
   );
 }

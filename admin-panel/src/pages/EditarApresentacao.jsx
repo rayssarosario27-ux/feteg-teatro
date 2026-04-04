@@ -1,26 +1,65 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import '../styles/EditarApresentacao.css';
 
 export default function EditarApresentacao() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+  const isNovo = !id || id === 'novo';
   const [imagemPreview, setImagemPreview] = useState(null);
 
   const [dados, setDados] = useState({
-    nome: 'Romeu e Julieta',
-    classificacao: '12 anos',
-    duracao: '120',
-    genero: 'Drama, Romance',
-    sinopse: 'Uma história clássica de amor proibido...',
-    elenco: 'João Silva, Maria Santos, Pedro Oliveira',
-    avisos: 'Contém cenas de violência',
+    nome: '',
+    classificacao: 'L',
+    duracao: '',
+    genero: '',
+    sinopse: '',
+    elenco: '',
+    avisos: '',
     dataInicio: '2026-04-15',
     dataFim: '2026-04-20',
-    local: 'Teatro Municipal',
-    endereco: 'Rua das Flores, 123',
+    data: '15',
+    local: '',
+    endereco: '',
     status: 'ativo'
   });
+
+  useEffect(() => {
+    if (isNovo) return;
+
+    const carregar = async () => {
+      try {
+        const resposta = await fetch(`${API_URL}/api/apresentacoes/${id}`);
+        if (!resposta.ok) {
+          throw new Error(`Falha API: ${resposta.status}`);
+        }
+
+        const item = await resposta.json();
+        setDados({
+          nome: item.nome || '',
+          classificacao: item.classificacao || 'L',
+          duracao: item.duracao || '',
+          genero: item.genero || '',
+          sinopse: item.sinopse || '',
+          elenco: item.elenco || '',
+          avisos: item.avisos || '',
+          dataInicio: item.dataInicio || '2026-04-15',
+          dataFim: item.dataFim || '2026-04-20',
+          data: item.data || '15',
+          local: item.local || '',
+          endereco: item.endereco || '',
+          status: item.status || 'ativo'
+        });
+        setImagemPreview(item.imagemCarousel || item.imagemCard || null);
+      } catch (error) {
+        console.error('Erro ao carregar apresentacao:', error);
+        alert('Nao foi possivel carregar os dados da apresentacao.');
+      }
+    };
+
+    carregar();
+  }, [API_URL, id, isNovo]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -38,10 +77,36 @@ export default function EditarApresentacao() {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    alert('✅ Apresentação salva com sucesso!');
-    navigate('/admin/apresentacoes');
+
+    const payload = {
+      ...dados,
+      imagemCard: imagemPreview,
+      imagemCarousel: imagemPreview
+    };
+
+    try {
+      const endpoint = isNovo
+        ? `${API_URL}/api/apresentacoes`
+        : `${API_URL}/api/apresentacoes/${id}`;
+
+      const resposta = await fetch(endpoint, {
+        method: isNovo ? 'POST' : 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      if (!resposta.ok) {
+        throw new Error(`Falha API: ${resposta.status}`);
+      }
+
+      alert('✅ Apresentação salva com sucesso!');
+      navigate('/admin/apresentacoes');
+    } catch (error) {
+      console.error('Erro ao salvar apresentacao:', error);
+      alert('Nao foi possivel salvar a apresentacao.');
+    }
   };
 
   const handleCancel = () => {
@@ -53,7 +118,7 @@ export default function EditarApresentacao() {
       <div className="editar-container">
         <div className="editar-header">
           <p className="editar-kicker">Direcao Artistica</p>
-          <h1>{id ? 'Editar Apresentacao' : 'Nova Apresentacao'}</h1>
+          <h1>{isNovo ? 'Nova Apresentacao' : 'Editar Apresentacao'}</h1>
           <p>Atualize informacoes da peca, agenda e material visual em um unico fluxo.</p>
         </div>
 
@@ -161,6 +226,17 @@ export default function EditarApresentacao() {
               <h2>Datas</h2>
 
               <div className="form-row">
+                <div className="form-group">
+                  <label>Dia do Festival *</label>
+                  <input
+                    type="text"
+                    name="data"
+                    value={dados.data}
+                    onChange={handleChange}
+                    placeholder="Ex: 15"
+                    required
+                  />
+                </div>
                 <div className="form-group">
                   <label>Data Início *</label>
                   <input

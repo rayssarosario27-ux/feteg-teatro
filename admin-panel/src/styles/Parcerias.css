@@ -162,6 +162,11 @@
   color: #ffd47a;
 }
 
+.tipo.realizacao {
+  background: rgba(196, 166, 255, 0.2);
+  color: #dac6ff;
+}
+
 .btn-acao {
   padding: 8px 11px;
   border: none;

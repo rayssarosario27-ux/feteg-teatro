@@ -1,92 +1,163 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import ConfirmDialog from '../components/ConfirmDialog';
 import '../styles/Dashboard.css';
 
 export default function Dashboard() {
   const navigate = useNavigate();
-  const [apresentacoes, setApresentacoes] = useState(() => {
-    const base = [
-      {
-        id: 1,
-        nome: 'Romeu e Julieta',
-        data: '15-20 abr',
-        status: 'ativo',
-        genero: 'Drama, Romance',
-        local: 'Teatro Municipal',
-        classificacao: '12 anos',
-        duracao: '120',
-        imagemCard: null,
-        imagemCarousel: null
-      },
-      {
-        id: 2,
-        nome: 'Cinderela',
-        data: 'Jun-Jul',
-        status: 'ativo',
-        genero: 'Infantil, Fantasia',
-        local: 'Auditório Principal',
-        classificacao: 'L',
-        duracao: '100',
-        imagemCard: null,
-        imagemCarousel: null
-      },
-      {
-        id: 3,
-        nome: 'Aladim',
-        data: 'Agosto',
-        status: 'ativo',
-        genero: 'Aventura, Fantasia',
-        local: 'Teatro Popular',
-        classificacao: '10 anos',
-        duracao: '110',
-        imagemCard: null,
-        imagemCarousel: null
-      }
-    ];
-
-    return base.map((ap) => {
-      const salvo = localStorage.getItem(`ap_${ap.id}_data`);
-      return salvo ? { ...ap, ...JSON.parse(salvo) } : ap;
-    });
-  });
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+  const [apresentacoes, setApresentacoes] = useState([]);
   const [slideAtivo, setSlideAtivo] = useState(0);
+  const [publicando, setPublicando] = useState(false);
+  const [ultimaPublicacao, setUltimaPublicacao] = useState(null);
+  const [publicadoManualmente, setPublicadoManualmente] = useState(false);
+  const [confirmDialog, setConfirmDialog] = useState({ isOpen: false, type: null });
 
-  const salvarNoFrontend = (item) => {
-    localStorage.setItem(`ap_${item.id}_data`, JSON.stringify(item));
+  useEffect(() => {
+    const carregarApresentacoes = async () => {
+      try {
+        const resposta = await fetch(`${API_URL}/api/apresentacoes`, { cache: 'no-store' });
+        if (!resposta.ok) {
+          throw new Error(`Falha API: ${resposta.status}`);
+        }
+        const dados = await resposta.json();
+        const lista = Array.isArray(dados) ? dados : [];
+        setApresentacoes(lista);
+        if (slideAtivo >= lista.length) {
+          setSlideAtivo(0);
+        }
+      } catch (error) {
+        console.error('Erro ao carregar apresentacoes:', error);
+        setApresentacoes([]);
+      }
+    };
+
+    carregarApresentacoes();
+  }, [API_URL]);
+
+  useEffect(() => {
+    const carregarStatusPublicacao = async () => {
+      try {
+        const resposta = await fetch(`${API_URL}/api/publico`, { cache: 'no-store' });
+        if (!resposta.ok) {
+          throw new Error(`Falha API: ${resposta.status}`);
+        }
+        const dados = await resposta.json();
+        setUltimaPublicacao(dados.publishedAt || null);
+        setPublicadoManualmente(Boolean(dados.publishedByAdmin));
+      } catch (error) {
+        console.error('Erro ao carregar status de publicacao:', error);
+      }
+    };
+
+    carregarStatusPublicacao();
+  }, [API_URL]);
+
+  const handlePublicarAtualizacao = async () => {
+    setPublicando(true);
+    try {
+      const resposta = await fetch(`${API_URL}/api/publicar-site`, {
+        method: 'POST',
+        cache: 'no-store'
+      });
+
+      if (!resposta.ok) {
+        throw new Error(`Falha API: ${resposta.status}`);
+      }
+
+      const dados = await resposta.json();
+      setUltimaPublicacao(dados.publishedAt || null);
+      setPublicadoManualmente(Boolean(dados.publishedByAdmin));
+      alert('Atualizacao publicada no frontend com sucesso!');
+    } catch (error) {
+      console.error('Erro ao publicar atualizacao:', error);
+      alert('Nao foi possivel publicar agora. Tente novamente.');
+    } finally {
+      setPublicando(false);
+    }
   };
 
-  const handleCarouselUpload = (id, file) => {
+  const handleTirarAtualizacaoDoAr = async () => {
+    setConfirmDialog({ isOpen: true, type: 'tirar-atualizacao' });
+  };
+
+  const confirmarTirarAtualizacao = async () => {
+    setPublicando(true);
+    try {
+      const resposta = await fetch(`${API_URL}/api/tirar-site-do-ar`, {
+        method: 'POST',
+        cache: 'no-store'
+      });
+
+      if (!resposta.ok) {
+        throw new Error(`Falha API: ${resposta.status}`);
+      }
+
+      const dados = await resposta.json();
+      setUltimaPublicacao(dados.publishedAt || null);
+      setPublicadoManualmente(Boolean(dados.publishedByAdmin));
+      alert('Atualizacao retirada do ar com sucesso.');
+    } catch (error) {
+      console.error('Erro ao tirar atualizacao do ar:', error);
+      alert('Nao foi possivel tirar a atualizacao do ar agora.');
+    } finally {
+      setConfirmDialog({ isOpen: false, type: null });
+      setPublicando(false);
+    }
+  };
+
+  const handleCarouselUpload = async (id, file) => {
     if (!file) return;
     const reader = new FileReader();
-    reader.onload = (event) => {
-      setApresentacoes((atual) =>
-        atual.map((ap) => {
-          if (ap.id !== id) return ap;
-          const atualizado = { ...ap, imagemCarousel: event.target.result };
-          salvarNoFrontend(atualizado);
-          return atualizado;
-        })
-      );
+    reader.onload = async (event) => {
+      try {
+        const resposta = await fetch(`${API_URL}/api/apresentacoes/${id}`, {
+          method: 'PUT',
+          cache: 'no-store',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ imagemCarousel: event.target.result })
+        });
+        if (!resposta.ok) {
+          throw new Error(`Falha API: ${resposta.status}`);
+        }
+        const atualizado = await resposta.json();
+        setApresentacoes((atual) =>
+          atual.map((ap) => (ap.id === id ? atualizado : ap))
+        );
+      } catch (error) {
+        console.error('Erro ao salvar imagem do carrossel:', error);
+      }
     };
     reader.readAsDataURL(file);
   };
 
-  const limparImagemCarousel = (id) => {
-    setApresentacoes((atual) =>
-      atual.map((ap) => {
-        if (ap.id !== id) return ap;
-        const atualizado = { ...ap, imagemCarousel: null };
-        salvarNoFrontend(atualizado);
-        return atualizado;
-      })
-    );
+  const limparImagemCarousel = async (id) => {
+    try {
+      const resposta = await fetch(`${API_URL}/api/apresentacoes/${id}`, {
+        method: 'PUT',
+        cache: 'no-store',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ imagemCarousel: null })
+      });
+      if (!resposta.ok) {
+        throw new Error(`Falha API: ${resposta.status}`);
+      }
+      const atualizado = await resposta.json();
+      setApresentacoes((atual) =>
+        atual.map((ap) => (ap.id === id ? atualizado : ap))
+      );
+    } catch (error) {
+      console.error('Erro ao limpar imagem do carrossel:', error);
+    }
   };
 
   const irSlideAnterior = () => {
+    if (apresentacoes.length === 0) return;
     setSlideAtivo((prev) => (prev === 0 ? apresentacoes.length - 1 : prev - 1));
   };
 
   const irSlideProximo = () => {
+    if (apresentacoes.length === 0) return;
     setSlideAtivo((prev) => (prev + 1) % apresentacoes.length);
   };
 
@@ -100,10 +171,15 @@ export default function Dashboard() {
   };
 
   const handleDelete = () => {
-    if (window.confirm('Tem certeza que deseja deletar?')) {
-      alert('Apresentação deletada!');
-    }
+    setConfirmDialog({ isOpen: true, type: 'delete-apresentacao' });
   };
+
+  const confirmarDeleteApresentacao = () => {
+    setConfirmDialog({ isOpen: false, type: null });
+    alert('Apresentação deletada!');
+  };
+
+  const apresentacaoAtual = apresentacoes[slideAtivo];
 
   return (
     <div className="dashboard-content">
@@ -111,6 +187,31 @@ export default function Dashboard() {
         <p className="dashboard-kicker">Controle Criativo</p>
         <h1>Dashboard</h1>
         <p>Visual premium, leitura rápida e gestão direta do conteúdo exibido no frontend.</p>
+        <div className="publish-box">
+          <div className="publish-actions">
+            <button
+              type="button"
+              className="btn-publicar"
+              onClick={handlePublicarAtualizacao}
+              disabled={publicando}
+            >
+              {publicando ? 'Processando...' : 'Subir atualizacao'}
+            </button>
+            <button
+              type="button"
+              className="btn-despublicar"
+              onClick={handleTirarAtualizacaoDoAr}
+              disabled={publicando}
+            >
+              Tirar atualizacao do ar
+            </button>
+          </div>
+          <span className="publish-status">
+            {publicadoManualmente && ultimaPublicacao
+              ? `Ultima publicacao: ${new Date(ultimaPublicacao).toLocaleString('pt-BR')}`
+              : 'Sem atualizacao publicada manualmente'}
+          </span>
+        </div>
       </div>
 
       {/* GRID DE CARDS STATS */}
@@ -159,23 +260,31 @@ export default function Dashboard() {
       <section className="carousel-admin-section">
         <div className="section-title">
           <h2>Carrossel do Frontend</h2>
-          <span className="carousel-badge">Sincronizado via localStorage</span>
+          <span className="carousel-badge">Sincronizado via API</span>
         </div>
 
-        <div className="carousel-preview-shell">
-          <img
-            src={getImagem(apresentacoes[slideAtivo])}
-            alt={apresentacoes[slideAtivo].nome}
-            className="carousel-preview-img"
-          />
-          <div className="carousel-preview-overlay" />
-          <div className="carousel-preview-content">
-            <h3>{apresentacoes[slideAtivo].nome}</h3>
-            <p>{apresentacoes[slideAtivo].genero}</p>
+        {apresentacaoAtual ? (
+          <div className="carousel-preview-shell">
+            <img
+              src={getImagem(apresentacaoAtual)}
+              alt={apresentacaoAtual.nome}
+              className="carousel-preview-img"
+            />
+            <div className="carousel-preview-overlay" />
+            <div className="carousel-preview-content">
+              <h3>{apresentacaoAtual.nome}</h3>
+              <p>{apresentacaoAtual.genero}</p>
+            </div>
+            <button type="button" className="slide-btn prev" onClick={irSlideAnterior}>‹</button>
+            <button type="button" className="slide-btn next" onClick={irSlideProximo}>›</button>
           </div>
-          <button type="button" className="slide-btn prev" onClick={irSlideAnterior}>‹</button>
-          <button type="button" className="slide-btn next" onClick={irSlideProximo}>›</button>
-        </div>
+        ) : (
+          <div className="carousel-preview-shell">
+            <div className="carousel-preview-content">
+              <h3>Sem apresentações cadastradas</h3>
+            </div>
+          </div>
+        )}
 
         <div className="carousel-editor-grid">
           {apresentacoes.map((ap, index) => (
@@ -192,24 +301,6 @@ export default function Dashboard() {
               </button>
               <h4>{ap.nome}</h4>
               <p>{ap.local}</p>
-
-              <label htmlFor={`upload-carousel-${ap.id}`} className="btn-upload-carousel">
-                Trocar imagem
-              </label>
-              <input
-                id={`upload-carousel-${ap.id}`}
-                type="file"
-                accept="image/*"
-                className="hidden-input"
-                onChange={(e) => handleCarouselUpload(ap.id, e.target.files?.[0])}
-              />
-              <button
-                type="button"
-                className="btn-clear-carousel"
-                onClick={() => limparImagemCarousel(ap.id)}
-              >
-                Remover imagem
-              </button>
             </article>
           ))}
         </div>
@@ -266,6 +357,23 @@ export default function Dashboard() {
           <p>Ao atualizar as imagens do carrossel aqui no painel, o destaque principal da Home muda automaticamente no frontend.</p>
         </div>
       </div>
+
+      <ConfirmDialog
+        isOpen={confirmDialog.isOpen && confirmDialog.type === 'tirar-atualizacao'}
+        title="Tirar Atualização do Ar?"
+        message="O frontend voltará para a tela de 'Novidades em breve'. Esta ação não pode ser desfeita imediatamente."
+        onConfirm={confirmarTirarAtualizacao}
+        onCancel={() => setConfirmDialog({ isOpen: false, type: null })}
+        isLoading={publicando}
+      />
+
+      <ConfirmDialog
+        isOpen={confirmDialog.isOpen && confirmDialog.type === 'delete-apresentacao'}
+        title="Deletar Apresentação?"
+        message="Esta ação é irreversível. A apresentação será removida permanentemente."
+        onConfirm={confirmarDeleteApresentacao}
+        onCancel={() => setConfirmDialog({ isOpen: false, type: null })}
+      />
     </div>
   );
 }

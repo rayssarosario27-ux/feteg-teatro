@@ -33,6 +33,61 @@
   font-size: 16px;
 }
 
+.publish-box {
+  margin-top: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.publish-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.btn-publicar {
+  border: none;
+  border-radius: 10px;
+  padding: 10px 16px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  font-weight: 700;
+  cursor: pointer;
+  color: #111621;
+  background: linear-gradient(120deg, #ff7a29, #ff5a1f);
+}
+
+.btn-publicar:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.btn-despublicar {
+  border: 1px solid rgba(250, 69, 102, 0.45);
+  border-radius: 10px;
+  padding: 10px 16px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  font-weight: 700;
+  cursor: pointer;
+  color: #ff9fb2;
+  background: rgba(250, 69, 102, 0.14);
+}
+
+.btn-despublicar:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.publish-status {
+  font-size: 12px;
+  color: #9ca7bf;
+}
+
 /* STATS GRID */
 .stats-grid {
   display: grid;

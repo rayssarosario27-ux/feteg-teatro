@@ -313,6 +313,25 @@
   gap: 10px;
 }
 
+.carousel-ajuste-box {
+  padding: 10px;
+  border-radius: 8px;
+  background: rgba(140, 248, 255, 0.1);
+  border: 1px solid rgba(140, 248, 255, 0.3);
+}
+
+.carousel-ajuste-label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 12px;
+  color: #bceff4;
+}
+
+.carousel-ajuste-range {
+  width: 100%;
+  accent-color: #ff7a29;
+}
+
 .preview-img {
   width: 100%;
   max-height: 230px;
