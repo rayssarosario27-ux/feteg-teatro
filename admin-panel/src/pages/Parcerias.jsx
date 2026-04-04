@@ -192,13 +192,13 @@ export default function Parcerias() {
               </tr>
             ) : parcerias.map(p => (
               <tr key={p.id}>
-                <td>{p.nome}</td>
-                <td>
+                <td data-label="Nome">{p.nome}</td>
+                <td data-label="Tipo">
                   <span className={`tipo ${getTipoClasse(p.tipo)}`}>
                     {p.tipo}
                   </span>
                 </td>
-                <td>
+                <td data-label="Ações">
                   <button className="btn-acao btn-editar" onClick={() => handleEdit(p)}>
                     Editar
                   </button>

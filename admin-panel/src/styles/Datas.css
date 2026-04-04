@@ -240,7 +240,63 @@
   }
 
   .tabela-container {
-    overflow-x: auto;
+    overflow: visible;
     -webkit-overflow-scrolling: touch;
+  }
+
+  .tabela-grande,
+  .tabela-grande thead,
+  .tabela-grande tbody,
+  .tabela-grande tr,
+  .tabela-grande th,
+  .tabela-grande td {
+    display: block;
+    width: 100%;
+  }
+
+  .tabela-grande thead {
+    display: none;
+  }
+
+  .tabela-grande tr {
+    margin-bottom: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 14px;
+    background: rgba(10, 16, 24, 0.84);
+    overflow: hidden;
+  }
+
+  .tabela-grande td {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    align-items: center;
+    padding: 12px 14px;
+    white-space: normal;
+    border-bottom: 1px solid rgba(150, 165, 192, 0.16);
+  }
+
+  .tabela-grande td::before {
+    content: attr(data-label);
+    flex: 0 0 42%;
+    color: #ff8d39;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    font-weight: 700;
+  }
+
+  .tabela-grande td:last-child {
+    border-bottom: none;
+  }
+
+  .tabela-grande td[data-label="Ações"] {
+    align-items: stretch;
+  }
+
+  .tabela-grande td[data-label="Ações"] .btn-acao {
+    width: 100%;
+    margin-right: 0;
+    margin-bottom: 8px;
   }
 }

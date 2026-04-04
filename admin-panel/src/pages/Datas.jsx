@@ -155,9 +155,9 @@ export default function Datas() {
           <tbody>
             {datas.map(d => (
               <tr key={d.id}>
-                <td>{formatarData(d.data)}</td>
-                <td>{d.dia || calcularDiaSemana(d.data)}</td>
-                <td>
+                <td data-label="Data">{formatarData(d.data)}</td>
+                <td data-label="Dia da Semana">{d.dia || calcularDiaSemana(d.data)}</td>
+                <td data-label="Ações">
                   <button className="btn-acao btn-editar" onClick={() => handleEdit(d)}>
                     Editar
                   </button>

@@ -199,21 +199,21 @@ export default function Apresentacoes() {
             <tbody>
               {apresentacoesFiltradas.map(ap => (
                 <tr key={ap.id}>
-                  <td className="thumb-cell">
+                  <td className="thumb-cell" data-label="Thumbnail">
                     <img src={getImagemThumb(ap)} alt={ap.nome} className="thumb-img" />
                   </td>
-                  <td>{ap.nome}</td>
-                  <td>{ap.classificacao}</td>
-                  <td>{ap.duracao}</td>
-                  <td>{ap.genero}</td>
-                  <td>{ap.data}</td>
-                  <td>{ap.horario || '-'}</td>
-                  <td>
+                  <td data-label="Nome">{ap.nome}</td>
+                  <td data-label="Classificação">{ap.classificacao}</td>
+                  <td data-label="Duração">{ap.duracao}</td>
+                  <td data-label="Gênero">{ap.genero}</td>
+                  <td data-label="Data">{ap.data}</td>
+                  <td data-label="Horário">{ap.horario || '-'}</td>
+                  <td data-label="Status">
                     <span className={`status ${ap.status}`}>
                       {ap.status}
                     </span>
                   </td>
-                  <td className="imagens-cell">
+                  <td className="imagens-cell" data-label="Imagens">
                     <button
                       className={`btn-imagem ${ap.imagemCard ? 'ativo' : ''}`}
                       onClick={() => {
@@ -239,7 +239,7 @@ export default function Apresentacoes() {
                       {ap.imagemCarousel ? 'Carrossel ativo' : 'Enviar carrossel'}
                     </button>
                   </td>
-                  <td className="acoes-cell">
+                  <td className="acoes-cell" data-label="Ações">
                     <button 
                       className="btn-acao btn-editar"
                       onClick={() => handleEdit(ap.id)}
