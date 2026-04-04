@@ -2,7 +2,10 @@ export function getApiBaseUrl() {
   const envUrl = import.meta.env.VITE_API_URL?.trim();
 
   if (envUrl) {
-    return envUrl.replace(/\/$/, '');
+    const semBarraFinal = envUrl.replace(/\/$/, '');
+    return semBarraFinal.endsWith('/api')
+      ? semBarraFinal.slice(0, -4)
+      : semBarraFinal;
   }
 
   if (typeof window !== 'undefined') {
@@ -13,5 +16,5 @@ export function getApiBaseUrl() {
     }
   }
 
-  return 'https://admin-feteg.vercel.app/api';
+  return 'https://admin-feteg.vercel.app';
 }
