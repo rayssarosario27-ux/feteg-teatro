@@ -16,10 +16,25 @@ export default function Home() {
 
   const [indiceCarousel, setIndiceCarousel] = useState(0);
   const [pesquisa, setPesquisa] = useState('');
-  const [dataSelecionada, setDataSelecionada] = useState('');
+  const [dataSelecionada, setDataSelecionada] = useState('todos');
   const [parcerias, setParcerias] = useState([]);
   const [datasFestival, setDatasFestival] = useState([]);
   const cardsSectionRef = useRef(null);
+
+  const registrarVisualizacao = (apresentacaoId) => {
+    if (!apresentacaoId) return;
+
+    sessionStorage.setItem('feteg_last_view_click', JSON.stringify({
+      id: String(apresentacaoId),
+      at: Date.now()
+    }));
+
+    fetch(`${API_URL}/api/apresentacoes/${apresentacaoId}/view`, {
+      method: 'POST',
+      cache: 'no-store',
+      keepalive: true
+    }).catch((err) => console.error('Erro ao registrar visualizacao:', err));
+  };
 
   // Auto-play carousel
   useEffect(() => {
@@ -53,11 +68,6 @@ export default function Home() {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(parceriasPublicas));
         localStorage.setItem(DATAS_STORAGE_KEY, JSON.stringify(datasPublicas));
 
-        if (datasPublicas.length > 0 && !datasPublicas.some((item) => String(item.data) === dataSelecionada)) {
-          setDataSelecionada(String(datasPublicas[0].data || ''));
-        } else if (apresentacoesPublicas.length > 0 && !apresentacoesPublicas.some((ap) => String(ap.data) === dataSelecionada)) {
-          setDataSelecionada(String(apresentacoesPublicas[0].data || '15'));
-        }
       } catch (error) {
         console.error('Erro ao carregar conteudo publicado:', error);
         try {
@@ -113,6 +123,7 @@ export default function Home() {
 
   const handleSaibaMais = () => {
     if (!apresentacaoAtual) return;
+    registrarVisualizacao(apresentacaoAtual.id);
     navigate(`/detalhes/${apresentacaoAtual.id}`);
   };
 
@@ -121,7 +132,7 @@ export default function Home() {
 
     return apresentacoes.filter((ap) => {
       const matchPesquisa = ap.nome.toLowerCase().includes(pesquisa.toLowerCase());
-      const matchDia = !diaSelecionadoNormalizado || normalizarDia(ap.data) === diaSelecionadoNormalizado;
+      const matchDia = dataSelecionada === 'todos' || !diaSelecionadoNormalizado || normalizarDia(ap.data) === diaSelecionadoNormalizado;
       return matchPesquisa && matchDia;
     });
   }, [apresentacoes, pesquisa, dataSelecionada]);
@@ -131,7 +142,7 @@ export default function Home() {
       .map((item) => String(item.data || '').trim())
       .filter((valor) => valor.length > 0);
     const unicas = [...new Set(todas)];
-    return unicas.length > 0 ? unicas : ['15', '16', '17', '18', '19', '20'];
+    return ['todos', ...(unicas.length > 0 ? unicas : ['15', '16', '17', '18', '19', '20'])];
   }, [datasFestival]);
 
   const handlePesquisa = (valor) => {
@@ -262,8 +273,8 @@ export default function Home() {
         <div className="dates-box">
           <h3>Selecione uma Data</h3>
           <div className="date-display">
-            <span className="date-day">{formatarNumeroDia(dataSelecionada)}</span>
-            <span className="date-info">Abril · {anoAtual}</span>
+            <span className="date-day">{dataSelecionada === 'todos' ? 'Todos' : formatarNumeroDia(dataSelecionada)}</span>
+            <span className="date-info">{dataSelecionada === 'todos' ? 'Todas as apresentações' : `Abril · ${anoAtual}`}</span>
           </div>
           <div className="dates-buttons">
             {datas.map((data) => (
@@ -272,7 +283,7 @@ export default function Home() {
                 className={`date-btn ${dataSelecionada === data ? 'active' : ''}`}
                 onClick={() => setDataSelecionada(data)}
               >
-                {formatarNumeroDia(data)}
+                {data === 'todos' ? 'Todos' : formatarNumeroDia(data)}
               </button>
             ))}
           </div>
@@ -285,7 +296,7 @@ export default function Home() {
         <div className="cards-container">
           {apresentacoesFiltradas.length > 0 ? (
             apresentacoesFiltradas.map((item, idx) => (
-              <Link to={`/detalhes/${item.id}`} key={item.id} className="card">
+              <Link to={`/detalhes/${item.id}`} key={item.id} className="card" onClick={() => registrarVisualizacao(item.id)}>
                 <div className="card-image-wrapper">
                   <img
                     src={getImagemCard(item)}

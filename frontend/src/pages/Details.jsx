@@ -12,6 +12,20 @@ export default function Details() {
   const [show, setShow] = useState(null);
 
   useEffect(() => {
+    const ultimoClique = (() => {
+      try {
+        const bruto = sessionStorage.getItem('feteg_last_view_click');
+        return bruto ? JSON.parse(bruto) : null;
+      } catch {
+        return null;
+      }
+    })();
+
+    const foiContadoNoClique =
+      ultimoClique &&
+      String(ultimoClique.id) === String(id) &&
+      Date.now() - Number(ultimoClique.at || 0) < 4000;
+
     const fallback = () => {
       try {
         const local = localStorage.getItem(STORAGE_KEY);
@@ -41,8 +55,8 @@ export default function Details() {
         const item = lista.find((ap) => String(ap.id) === String(id));
         setShow(item || null);
         
-        // Incrementar visualizações
-        if (item && item.id) {
+        // Incrementar visualizações apenas quando o clique ainda nao foi contado no card
+        if (item && item.id && !foiContadoNoClique) {
           fetch(`${API_URL}/api/apresentacoes/${item.id}/view`, {
             method: 'POST',
             cache: 'no-store'
