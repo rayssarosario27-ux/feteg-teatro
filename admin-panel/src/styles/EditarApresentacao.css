@@ -1,5 +1,5 @@
 .editar-page {
-  padding: 36px;
+  padding: 32px;
   width: 100%;
   overflow-y: auto;
   max-height: calc(100vh - 160px);
@@ -210,19 +210,38 @@
   .form-apresentacao {
     grid-template-columns: 1fr;
   }
+
+  .editar-page {
+    max-height: none;
+  }
 }
 
 @media (max-width: 768px) {
   .editar-page {
-    padding: 20px;
+    padding: 16px;
+    max-height: none;
   }
 
   .editar-header h1 {
-    font-size: 32px;
+    font-size: 30px;
+  }
+
+  .editar-header p {
+    font-size: 13px;
+  }
+
+  .form-section {
+    padding: 16px;
   }
 
   .form-row {
     grid-template-columns: 1fr;
+  }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    font-size: 16px;
   }
 
   .form-actions {

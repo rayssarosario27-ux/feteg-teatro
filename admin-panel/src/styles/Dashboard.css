@@ -1,5 +1,5 @@
 .dashboard-content {
-  padding: 36px;
+  padding: 32px;
   width: 100%;
   overflow-y: auto;
   max-height: calc(100vh - 160px);
@@ -91,7 +91,7 @@
 /* STATS GRID */
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 16px;
   margin-bottom: 24px;
 }
@@ -108,6 +108,10 @@
   transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   position: relative;
   overflow: hidden;
+}
+
+.stat-card-body {
+  min-width: 0;
 }
 
 .stat-card::before {
@@ -515,8 +519,25 @@
 
 /* RESPONSIVO */
 @media (max-width: 1024px) {
+  .dashboard-content {
+    padding: 24px;
+    max-height: none;
+  }
+
+  .dashboard-header h1 {
+    font-size: 34px;
+  }
+
   .stats-grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  .publish-box {
+    align-items: flex-start;
+  }
+
+  .carousel-preview-shell {
+    height: 250px;
   }
 
   .presentation-item {
@@ -530,11 +551,40 @@
 
 @media (max-width: 768px) {
   .dashboard-content {
-    padding: 20px;
+    padding: 16px;
+    overflow: visible;
+  }
+
+  .dashboard-header {
+    margin-bottom: 22px;
   }
 
   .dashboard-header h1 {
     font-size: 28px;
+  }
+
+  .dashboard-header p {
+    font-size: 14px;
+  }
+
+  .publish-box {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .publish-actions {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .btn-publicar,
+  .btn-despublicar {
+    width: 100%;
+  }
+
+  .publish-status {
+    width: 100%;
+    line-height: 1.4;
   }
 
   .carousel-preview-shell {
@@ -549,8 +599,33 @@
     grid-template-columns: 1fr;
   }
 
+  .stat-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 18px;
+  }
+
+  .stat-card-icon {
+    min-width: 0;
+  }
+
+  .stat-value {
+    font-size: 30px;
+  }
+
   .presentations-section {
     padding: 20px;
+  }
+
+  .section-title {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .section-title h2 {
+    font-size: 18px;
   }
 
   .presentation-item {
@@ -565,10 +640,24 @@
 
   .item-actions {
     justify-content: flex-start;
+    flex-wrap: wrap;
   }
 
   .info-box {
     flex-direction: column;
     text-align: center;
+    gap: 14px;
+  }
+
+  .carousel-preview-shell {
+    height: 200px;
+  }
+
+  .carousel-preview-content h3 {
+    font-size: 20px;
+  }
+
+  .carousel-preview-content p {
+    font-size: 13px;
   }
 }

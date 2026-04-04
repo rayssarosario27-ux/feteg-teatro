@@ -1,5 +1,5 @@
 .apresentacoes-page {
-  padding: 36px;
+  padding: 32px;
   width: 100%;
   overflow-y: auto;
   max-height: calc(100vh - 160px);
@@ -121,6 +121,7 @@
 .tabela-grande {
   width: 100%;
   border-collapse: collapse;
+  min-width: 1080px;
 }
 
 .tabela-grande thead {
@@ -144,6 +145,7 @@
   color: #d8e0f0;
   font-size: 13px;
   vertical-align: middle;
+  white-space: nowrap;
 }
 
 .tabela-grande tbody tr:hover {
@@ -384,27 +386,55 @@
 @media (max-width: 1200px) {
   .tabela-container {
     overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
   }
 }
 
 @media (max-width: 768px) {
   .apresentacoes-page {
-    padding: 20px;
+    padding: 16px;
+    max-height: none;
   }
 
   .apresentacoes-hero {
     flex-direction: column;
+    align-items: stretch;
   }
 
   .apresentacoes-hero h1 {
-    font-size: 32px;
+    font-size: 30px;
+  }
+
+  .header-content {
+    width: 100%;
+  }
+
+  .btn-novo {
+    width: 100%;
   }
 
   .filtros-container {
     grid-template-columns: 1fr;
   }
 
+  .input-pesquisa,
+  .input-filtro {
+    min-height: 46px;
+  }
+
   .modal-actions {
     flex-direction: column;
+  }
+
+  .modal-upload {
+    padding: 18px;
+  }
+
+  .modal-upload h2 {
+    font-size: 20px;
+  }
+
+  .tabela-grande {
+    min-width: 980px;
   }
 }
