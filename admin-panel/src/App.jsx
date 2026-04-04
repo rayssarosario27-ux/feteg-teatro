@@ -21,7 +21,7 @@ function App() {
           <Route path="parcerias" element={<Parcerias />} />
           <Route index element={<Navigate to="dashboard" replace />} />
         </Route>
-        <Route path="/" element={<Navigate to="/admin/dashboard" replace />} />
+        <Route path="/" element={<Navigate to="/login" replace />} />
       </Routes>
     </Router>
   )
