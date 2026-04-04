@@ -165,6 +165,25 @@
   display: block;
 }
 
+.banner-ajuste-box {
+  background: rgba(10, 16, 24, 0.82);
+  border: 1px solid rgba(159, 173, 204, 0.3);
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.banner-ajuste-label {
+  display: block;
+  color: #d8e0f0;
+  font-size: 12px;
+  margin-bottom: 8px;
+}
+
+.banner-ajuste-range {
+  width: 100%;
+  accent-color: #ff7a29;
+}
+
 .btn-remover-img {
   background: rgba(250, 69, 102, 0.2);
   color: #ff8ea2;

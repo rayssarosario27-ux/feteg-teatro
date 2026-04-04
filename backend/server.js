@@ -53,6 +53,7 @@ const mapApresentacao = (row) => ({
   dataInicio: row.data_inicio,
   dataFim: row.data_fim,
   imagemCard: row.imagem_card,
+  imagemCardPosicao: row.imagem_card_posicao || '50% 50%',
   imagemCarousel: row.imagem_carousel,
   imagemCarouselPosicao: row.imagem_carousel_posicao || '50% 50%',
   viewsCount: row.views_count || 0
@@ -146,11 +147,17 @@ async function initDb() {
       data_inicio TEXT DEFAULT '',
       data_fim TEXT DEFAULT '',
       imagem_card TEXT,
+      imagem_card_posicao TEXT DEFAULT '50% 50%',
       imagem_carousel TEXT,
       imagem_carousel_posicao TEXT DEFAULT '50% 50%',
       created_at TIMESTAMPTZ DEFAULT NOW(),
       updated_at TIMESTAMPTZ DEFAULT NOW()
     );
+  `);
+
+  await pool.query(`
+    ALTER TABLE apresentacoes
+    ADD COLUMN IF NOT EXISTS imagem_card_posicao TEXT DEFAULT '50% 50%';
   `);
 
   await pool.query(`
@@ -383,6 +390,7 @@ app.post('/api/apresentacoes', async (req, res) => {
     dataInicio = '',
     dataFim = '',
     imagemCard = null,
+    imagemCardPosicao = '50% 50%',
     imagemCarousel = null,
     imagemCarouselPosicao = '50% 50%'
   } = req.body;
@@ -394,9 +402,9 @@ app.post('/api/apresentacoes', async (req, res) => {
   try {
     const result = await pool.query(
       `INSERT INTO apresentacoes
-        (nome, classificacao, duracao, genero, data, horario, status, local, endereco, sinopse, elenco, avisos, data_inicio, data_fim, imagem_card, imagem_carousel, imagem_carousel_posicao)
+        (nome, classificacao, duracao, genero, data, horario, status, local, endereco, sinopse, elenco, avisos, data_inicio, data_fim, imagem_card, imagem_card_posicao, imagem_carousel, imagem_carousel_posicao)
        VALUES
-        ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
+        ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18)
        RETURNING *`,
       [
         String(nome).trim(),
@@ -414,6 +422,7 @@ app.post('/api/apresentacoes', async (req, res) => {
         String(dataInicio),
         String(dataFim),
         imagemCard,
+        String(imagemCardPosicao || '50% 50%'),
         imagemCarousel,
         String(imagemCarouselPosicao || '50% 50%')
       ]
@@ -455,6 +464,7 @@ app.put('/api/apresentacoes/:id', async (req, res) => {
       dataInicio: req.body.dataInicio ?? base.dataInicio,
       dataFim: req.body.dataFim ?? base.dataFim,
       imagemCard: req.body.imagemCard ?? base.imagemCard,
+      imagemCardPosicao: req.body.imagemCardPosicao ?? base.imagemCardPosicao,
       imagemCarousel: req.body.imagemCarousel ?? base.imagemCarousel,
       imagemCarouselPosicao: req.body.imagemCarouselPosicao ?? base.imagemCarouselPosicao
     };
@@ -476,9 +486,10 @@ app.put('/api/apresentacoes/:id', async (req, res) => {
         data_inicio = $13,
         data_fim = $14,
         imagem_card = $15,
-        imagem_carousel = $16,
-        imagem_carousel_posicao = $17
-             WHERE id = $18
+           imagem_card_posicao = $16,
+           imagem_carousel = $17,
+           imagem_carousel_posicao = $18
+             WHERE id = $19
        RETURNING *`,
       [
         String(payload.nome),
@@ -496,6 +507,7 @@ app.put('/api/apresentacoes/:id', async (req, res) => {
         String(payload.dataInicio),
         String(payload.dataFim),
         payload.imagemCard,
+        String(payload.imagemCardPosicao || '50% 50%'),
         payload.imagemCarousel,
         String(payload.imagemCarouselPosicao || '50% 50%'),
         id

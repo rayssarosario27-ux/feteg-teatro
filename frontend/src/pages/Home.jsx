@@ -207,6 +207,10 @@ export default function Home() {
     return `data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="300" height="200"%3E%3Crect fill="%23ff6b00" width="300" height="200"/%3E%3Ctext x="50%25" y="50%25" font-size="24" fill="white" text-anchor="middle" dominant-baseline="middle" font-weight="bold"%3E${item.nome}%3C/text%3E%3C/svg%3E`;
   };
 
+  const getPosicaoImagemCard = (item) => {
+    return item.imagemCardPosicao || '50% 50%';
+  };
+
   return (
     <div className="home">
       {/* HEADER */}
@@ -303,6 +307,7 @@ export default function Home() {
                     src={getImagemCard(item)}
                     alt={item.nome}
                     className="card-img"
+                    style={{ objectPosition: getPosicaoImagemCard(item) }}
                   />
                   <span className="card-number">{idx + 1}</span>
                   <span className="card-classificacao">{item.classificacao}</span>

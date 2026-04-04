@@ -9,6 +9,7 @@ export default function EditarApresentacao() {
   const API_URL = getApiBaseUrl();
   const isNovo = !id || id === 'novo';
   const [imagemPreview, setImagemPreview] = useState(null);
+  const [ajusteBannerY, setAjusteBannerY] = useState(50);
 
   const [dados, setDados] = useState({
     nome: '',
@@ -55,6 +56,10 @@ export default function EditarApresentacao() {
           status: item.status || 'ativo'
         });
         setImagemPreview(item.imagemCard || null);
+        const posicao = String(item.imagemCardPosicao || '').trim();
+        const match = posicao.match(/\s(\d{1,3})%$/);
+        const posicaoY = match ? Number(match[1]) : 50;
+        setAjusteBannerY(Number.isNaN(posicaoY) ? 50 : Math.min(100, Math.max(0, posicaoY)));
       } catch (error) {
         console.error('Erro ao carregar apresentacao:', error);
         alert('Nao foi possivel carregar os dados da apresentacao.');
@@ -75,6 +80,7 @@ export default function EditarApresentacao() {
       const reader = new FileReader();
       reader.onload = (event) => {
         setImagemPreview(event.target.result);
+        setAjusteBannerY(50);
       };
       reader.readAsDataURL(file);
     }
@@ -85,7 +91,8 @@ export default function EditarApresentacao() {
 
     const payload = {
       ...dados,
-      imagemCard: imagemPreview
+      imagemCard: imagemPreview,
+      imagemCardPosicao: `50% ${ajusteBannerY}%`
     };
 
     try {
@@ -323,11 +330,33 @@ export default function EditarApresentacao() {
                 
                 {imagemPreview && (
                   <div className="preview-box">
-                    <img src={imagemPreview} alt="Preview" className="preview-img" />
+                    <img
+                      src={imagemPreview}
+                      alt="Preview"
+                      className="preview-img"
+                      style={{ objectPosition: `50% ${ajusteBannerY}%` }}
+                    />
+                    <div className="banner-ajuste-box">
+                      <label htmlFor="ajuste-banner-y" className="banner-ajuste-label">
+                        Ajuste vertical do banner: <strong>{ajusteBannerY}%</strong>
+                      </label>
+                      <input
+                        id="ajuste-banner-y"
+                        type="range"
+                        min="0"
+                        max="100"
+                        value={ajusteBannerY}
+                        onChange={(e) => setAjusteBannerY(Number(e.target.value))}
+                        className="banner-ajuste-range"
+                      />
+                    </div>
                     <button 
                       type="button"
                       className="btn-remover-img"
-                      onClick={() => setImagemPreview(null)}
+                      onClick={() => {
+                        setImagemPreview(null);
+                        setAjusteBannerY(50);
+                      }}
                     >
                       Remover
                     </button>
