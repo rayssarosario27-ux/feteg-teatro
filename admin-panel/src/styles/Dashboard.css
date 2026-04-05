@@ -661,3 +661,172 @@
     font-size: 13px;
   }
 }
+
+@media (max-width: 480px) {
+  .dashboard-content {
+    padding: 12px;
+  }
+
+  .dashboard-header {
+    margin-bottom: 18px;
+  }
+
+  .dashboard-kicker {
+    font-size: 9px;
+    letter-spacing: 1.4px;
+    margin-bottom: 6px;
+  }
+
+  .dashboard-header h1 {
+    font-size: 24px;
+    margin-bottom: 8px;
+  }
+
+  .dashboard-header p {
+    font-size: 13px;
+    line-height: 1.45;
+  }
+
+  .publish-box {
+    margin-top: 12px;
+    gap: 10px;
+  }
+
+  .btn-publicar,
+  .btn-despublicar {
+    padding: 9px 12px;
+    font-size: 11px;
+    border-radius: 9px;
+  }
+
+  .publish-status {
+    font-size: 11px;
+  }
+
+  .stats-grid {
+    gap: 12px;
+    margin-bottom: 18px;
+  }
+
+  .stat-card {
+    padding: 14px;
+    gap: 10px;
+    border-radius: 14px;
+  }
+
+  .stat-card-icon {
+    font-size: 30px;
+  }
+
+  .stat-label {
+    font-size: 10px;
+    margin-bottom: 6px;
+  }
+
+  .stat-value {
+    font-size: 26px;
+  }
+
+  .stat-desc {
+    font-size: 11px;
+  }
+
+  .carousel-admin-section,
+  .presentations-section,
+  .info-box {
+    border-radius: 14px;
+  }
+
+  .carousel-admin-section {
+    padding: 14px;
+    margin-bottom: 18px;
+  }
+
+  .carousel-badge {
+    padding: 5px 10px;
+    font-size: 10px;
+  }
+
+  .carousel-preview-shell {
+    height: 180px;
+  }
+
+  .carousel-preview-content {
+    left: 14px;
+    bottom: 14px;
+  }
+
+  .carousel-preview-content h3 {
+    font-size: 18px;
+  }
+
+  .carousel-preview-content p {
+    font-size: 12px;
+  }
+
+  .slide-btn {
+    width: 32px;
+    height: 32px;
+  }
+
+  .carousel-editor-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .carousel-editor-card {
+    padding: 12px;
+  }
+
+  .presentations-section {
+    padding: 14px;
+  }
+
+  .section-title {
+    margin-bottom: 18px;
+    padding-bottom: 12px;
+  }
+
+  .section-title h2 {
+    font-size: 16px;
+  }
+
+  .view-all {
+    font-size: 12px;
+  }
+
+  .presentation-item {
+    padding: 14px;
+    gap: 10px;
+  }
+
+  .item-info h4 {
+    font-size: 15px;
+  }
+
+  .badge {
+    padding: 6px 10px;
+    font-size: 10px;
+  }
+
+  .btn-icon {
+    width: 34px;
+    height: 34px;
+  }
+
+  .info-box {
+    padding: 16px;
+    gap: 12px;
+  }
+
+  .info-icon {
+    font-size: 26px;
+  }
+
+  .info-content h3 {
+    font-size: 15px;
+  }
+
+  .info-content p {
+    font-size: 12px;
+  }
+}
