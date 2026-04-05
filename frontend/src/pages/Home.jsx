@@ -60,6 +60,22 @@ export default function Home() {
 
   useEffect(() => {
     const carregarConteudoPublicado = async () => {
+      let deveRevalidarAgora = true;
+      try {
+        const bloqueioBruto = sessionStorage.getItem('feteg_skip_home_refresh_until');
+        const bloqueioAte = bloqueioBruto ? Number(bloqueioBruto) : 0;
+        if (bloqueioAte && Date.now() < bloqueioAte) {
+          deveRevalidarAgora = false;
+        }
+        sessionStorage.removeItem('feteg_skip_home_refresh_until');
+      } catch {
+        // no-op
+      }
+
+      if (!deveRevalidarAgora) {
+        return;
+      }
+
       try {
         const resposta = await fetch(`${API_URL}/api/publico?ts=${Date.now()}`, { cache: 'no-store' });
         if (!resposta.ok) {
