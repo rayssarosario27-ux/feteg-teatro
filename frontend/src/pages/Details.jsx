@@ -136,12 +136,10 @@ export default function Details() {
         className="btn-voltar"
         onClick={() => {
           if (location.state?.apresentacao) {
-            sessionStorage.setItem('feteg_skip_home_refresh_until', String(Date.now() + 30000));
             navigate(-1);
             return;
           }
 
-          sessionStorage.setItem('feteg_skip_home_refresh_until', String(Date.now() + 30000));
           navigate('/', { replace: true });
         }}
       >
