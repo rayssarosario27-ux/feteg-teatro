@@ -82,7 +82,7 @@ export default function Details() {
   if (!show) {
     return (
       <div className="details">
-        <button className="btn-voltar" onClick={() => navigate('/')}>
+        <button className="btn-voltar" onClick={() => navigate('/', { replace: true })}>
           Voltar
         </button>
         <div className="container">
@@ -132,7 +132,17 @@ export default function Details() {
       </header>
 
       {/* BOTÃO VOLTAR */}
-      <button className="btn-voltar" onClick={() => navigate('/')}>
+      <button
+        className="btn-voltar"
+        onClick={() => {
+          if (location.state?.apresentacao) {
+            navigate(-1);
+            return;
+          }
+
+          navigate('/', { replace: true });
+        }}
+      >
         Voltar
       </button>
 

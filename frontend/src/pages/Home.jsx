@@ -13,13 +13,23 @@ export default function Home() {
   const DATAS_STORAGE_KEY = 'feteg_datas';
   const anoAtual = new Date().getFullYear();
 
-  const [apresentacoes, setApresentacoes] = useState([]);
+  const carregarListaCache = (chave) => {
+    try {
+      const bruto = localStorage.getItem(chave);
+      const dados = bruto ? JSON.parse(bruto) : [];
+      return Array.isArray(dados) ? dados : [];
+    } catch {
+      return [];
+    }
+  };
+
+  const [apresentacoes, setApresentacoes] = useState(() => carregarListaCache(AP_STORAGE_KEY));
 
   const [indiceCarousel, setIndiceCarousel] = useState(0);
   const [pesquisa, setPesquisa] = useState('');
   const [dataSelecionada, setDataSelecionada] = useState('todos');
-  const [parcerias, setParcerias] = useState([]);
-  const [datasFestival, setDatasFestival] = useState([]);
+  const [parcerias, setParcerias] = useState(() => carregarListaCache(STORAGE_KEY));
+  const [datasFestival, setDatasFestival] = useState(() => carregarListaCache(DATAS_STORAGE_KEY));
   const cardsSectionRef = useRef(null);
 
   const registrarVisualizacao = (apresentacaoId) => {
