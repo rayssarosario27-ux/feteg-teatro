@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { FaInstagram, FaMapMarkerAlt, FaClock } from 'react-icons/fa';
 import { getApiBaseUrl } from '../utils/api';
 import '../styles/Details.css';
@@ -8,11 +8,21 @@ import logo from '../assets/logo.png';
 export default function Details() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const API_URL = getApiBaseUrl();
   const STORAGE_KEY = 'feteg_apresentacoes';
-  const [show, setShow] = useState(null);
+  const [show, setShow] = useState(() => {
+    const apresentada = location.state?.apresentacao;
+    return apresentada && String(apresentada.id) === String(id) ? apresentada : null;
+  });
 
   useEffect(() => {
+    const apresentada = location.state?.apresentacao;
+    if (apresentada && String(apresentada.id) === String(id)) {
+      setShow(apresentada);
+      return;
+    }
+
     const ultimoClique = (() => {
       try {
         const bruto = sessionStorage.getItem('feteg_last_view_click');
@@ -46,23 +56,16 @@ export default function Details() {
 
     const carregar = async () => {
       try {
-        const resposta = await fetch(`${API_URL}/api/publico?ts=${Date.now()}`, { cache: 'no-store' });
+        const resposta = await fetch(`${API_URL}/api/apresentacoes/${id}?ts=${Date.now()}`, { cache: 'no-store' });
         if (!resposta.ok) {
           throw new Error(`Falha API: ${resposta.status}`);
         }
         const dados = await resposta.json();
-        const lista = Array.isArray(dados.apresentacoes) ? dados.apresentacoes : [];
-        try {
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(lista));
-        } catch (storageError) {
-          console.warn('Nao foi possivel salvar cache local das apresentacoes:', storageError);
-        }
-        const item = lista.find((ap) => String(ap.id) === String(id));
-        setShow(item || null);
+        setShow(dados || null);
         
         // Incrementar visualizações apenas quando o clique ainda nao foi contado no card
-        if (item && item.id && !foiContadoNoClique) {
-          fetch(`${API_URL}/api/apresentacoes/${item.id}/view`, {
+        if (dados && dados.id && !foiContadoNoClique) {
+          fetch(`${API_URL}/api/apresentacoes/${dados.id}/view`, {
             method: 'POST',
             cache: 'no-store'
           }).catch((err) => console.error('Erro ao registrar visualização:', err));
@@ -74,7 +77,7 @@ export default function Details() {
     };
 
     carregar();
-  }, [API_URL, id]);
+  }, [API_URL, id, location.state]);
 
   if (!show) {
     return (

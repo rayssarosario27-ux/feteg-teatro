@@ -129,7 +129,7 @@ export default function Home() {
   const handleSaibaMais = () => {
     if (!apresentacaoAtual) return;
     registrarVisualizacao(apresentacaoAtual.id);
-    navigate(`/detalhes/${apresentacaoAtual.id}`);
+    navigate(`/detalhes/${apresentacaoAtual.id}`, { state: { apresentacao: apresentacaoAtual } });
   };
 
   const apresentacoesFiltradas = useMemo(() => {
@@ -305,7 +305,13 @@ export default function Home() {
         <div className="cards-container">
           {apresentacoesFiltradas.length > 0 ? (
             apresentacoesFiltradas.map((item, idx) => (
-              <Link to={`/detalhes/${item.id}`} key={item.id} className="card" onClick={() => registrarVisualizacao(item.id)}>
+              <Link
+                to={`/detalhes/${item.id}`}
+                state={{ apresentacao: item }}
+                key={item.id}
+                className="card"
+                onClick={() => registrarVisualizacao(item.id)}
+              >
                 <div className="card-image-wrapper">
                   <img
                     src={getImagemCard(item)}
