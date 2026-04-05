@@ -749,7 +749,7 @@ body {
   }
 
   .header-left h1 {
-    font-size: clamp(24px, 7vw, 34px);
+    font-size: clamp(20px, 5.8vw, 28px);
     line-height: 0.98;
     letter-spacing: 0.5px;
   }
@@ -868,11 +868,12 @@ body {
   }
 
   .partners-section {
-    padding: 10px 14px 40px;
+    padding: 8px 14px 28px;
   }
 
   .partners-grid {
     grid-template-columns: 1fr;
+    gap: 10px;
   }
 
   .cards-section h2 {
@@ -881,11 +882,40 @@ body {
   }
 
   .partners-header h2 {
-    font-size: 22px;
+    font-size: 18px;
+    letter-spacing: 0.4px;
   }
 
   .partners-header p {
-    font-size: 13px;
+    font-size: 12px;
+    line-height: 1.45;
+  }
+
+  .partner-card {
+    padding: 12px 13px;
+    border-radius: 10px;
+  }
+
+  .partner-card h3 {
+    margin-top: 8px;
+    font-size: 14px;
+    line-height: 1.25;
+  }
+
+  .partner-tag {
+    padding: 4px 8px;
+    font-size: 9px;
+    letter-spacing: 0.6px;
+  }
+
+  .partner-tag.patrocinio {
+    background: rgba(255, 122, 41, 0.08);
+    color: #ffb37a;
+  }
+
+  .partners-empty {
+    padding: 10px 0 0;
+    font-size: 12px;
   }
 
   .footer {
@@ -901,7 +931,8 @@ body {
   }
 
   .header-left h1 {
-    font-size: clamp(18px, 9vw, 30px);
+    font-size: clamp(16px, 7vw, 22px);
+    letter-spacing: 0.3px;
   }
 
   .search {
@@ -941,6 +972,30 @@ body {
 
   .carousel-nav {
     bottom: 16px;
+  }
+
+  .partners-section {
+    padding: 6px 12px 24px;
+  }
+
+  .partners-header h2 {
+    font-size: 16px;
+  }
+
+  .partners-header p {
+    font-size: 11px;
+  }
+
+  .partner-card {
+    padding: 11px 12px;
+  }
+
+  .partner-card h3 {
+    font-size: 13px;
+  }
+
+  .partner-tag {
+    padding: 3px 7px;
   }
 
   .dates-box {
