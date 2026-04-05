@@ -17,6 +17,26 @@ export default function Dashboard() {
   const [publicadoManualmente, setPublicadoManualmente] = useState(false);
   const [confirmDialog, setConfirmDialog] = useState({ isOpen: false, type: null });
 
+  const carregarResumoPublico = async () => {
+    const resposta = await fetch(`${API_URL}/api/publico`, { cache: 'no-store' });
+    if (!resposta.ok) {
+      throw new Error(`Falha API: ${resposta.status}`);
+    }
+
+    const dados = await resposta.json();
+    const apresentacoesPublicas = Array.isArray(dados.apresentacoes) ? dados.apresentacoes.length : 0;
+    const parceriasPublicas = Array.isArray(dados.parcerias) ? dados.parcerias.length : 0;
+    const datasPublicas = Array.isArray(dados.datas) ? dados.datas.length : 0;
+
+    return {
+      publishedAt: dados.publishedAt || null,
+      publishedByAdmin: Boolean(dados.publishedByAdmin),
+      apresentacoesPublicas,
+      parceriasPublicas,
+      datasPublicas
+    };
+  };
+
   useEffect(() => {
     const carregarApresentacoes = async () => {
       try {
@@ -109,10 +129,11 @@ export default function Dashboard() {
         throw new Error(`Falha API: ${resposta.status}`);
       }
 
-      const dados = await resposta.json();
-      setUltimaPublicacao(dados.publishedAt || null);
-      setPublicadoManualmente(Boolean(dados.publishedByAdmin));
-      alert('Atualizacao publicada no frontend com sucesso!');
+      await resposta.json();
+      const resumo = await carregarResumoPublico();
+      setUltimaPublicacao(resumo.publishedAt);
+      setPublicadoManualmente(resumo.publishedByAdmin);
+      alert(`Atualizacao publicada com sucesso!\nApresentacoes: ${resumo.apresentacoesPublicas}\nParcerias: ${resumo.parceriasPublicas}\nDatas: ${resumo.datasPublicas}`);
     } catch (error) {
       console.error('Erro ao publicar atualizacao:', error);
       alert('Nao foi possivel publicar agora. Tente novamente.');
@@ -137,10 +158,11 @@ export default function Dashboard() {
         throw new Error(`Falha API: ${resposta.status}`);
       }
 
-      const dados = await resposta.json();
-      setUltimaPublicacao(dados.publishedAt || null);
-      setPublicadoManualmente(Boolean(dados.publishedByAdmin));
-      alert('Atualizacao retirada do ar com sucesso.');
+      await resposta.json();
+      const resumo = await carregarResumoPublico();
+      setUltimaPublicacao(resumo.publishedAt);
+      setPublicadoManualmente(resumo.publishedByAdmin);
+      alert(`Atualizacao retirada do ar com sucesso.\nSnapshot atual: ${resumo.apresentacoesPublicas} apresentacoes, ${resumo.parceriasPublicas} parcerias e ${resumo.datasPublicas} datas.`);
     } catch (error) {
       console.error('Erro ao tirar atualizacao do ar:', error);
       alert('Nao foi possivel tirar a atualizacao do ar agora.');
@@ -239,7 +261,7 @@ export default function Dashboard() {
               onClick={handlePublicarAtualizacao}
               disabled={publicando}
             >
-              {publicando ? 'Processando...' : 'Subir atualizacao'}
+              {publicando ? 'Processando...' : 'Publicar conteudo no site'}
             </button>
             <button
               type="button"
