@@ -46,7 +46,7 @@ export default function Details() {
 
     const carregar = async () => {
       try {
-        const resposta = await fetch(`${API_URL}/api/publico`, { cache: 'no-store' });
+        const resposta = await fetch(`${API_URL}/api/publico?ts=${Date.now()}`, { cache: 'no-store' });
         if (!resposta.ok) {
           throw new Error(`Falha API: ${resposta.status}`);
         }
