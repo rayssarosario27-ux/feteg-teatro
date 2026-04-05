@@ -16,6 +16,12 @@ export default function Dashboard() {
   const [ultimaPublicacao, setUltimaPublicacao] = useState(null);
   const [publicadoManualmente, setPublicadoManualmente] = useState(false);
   const [confirmDialog, setConfirmDialog] = useState({ isOpen: false, type: null });
+  const [messageDialog, setMessageDialog] = useState({
+    isOpen: false,
+    title: '',
+    lines: [],
+    variant: 'success'
+  });
 
   const carregarResumoPublico = async () => {
     const resposta = await fetch(`${API_URL}/api/publico`, { cache: 'no-store' });
@@ -35,6 +41,19 @@ export default function Dashboard() {
       parceriasPublicas,
       datasPublicas
     };
+  };
+
+  const abrirMensagem = (title, lines, variant = 'success') => {
+    setMessageDialog({
+      isOpen: true,
+      title,
+      lines: Array.isArray(lines) ? lines : [String(lines)],
+      variant
+    });
+  };
+
+  const fecharMensagem = () => {
+    setMessageDialog({ isOpen: false, title: '', lines: [], variant: 'success' });
   };
 
   useEffect(() => {
@@ -133,10 +152,14 @@ export default function Dashboard() {
       const resumo = await carregarResumoPublico();
       setUltimaPublicacao(resumo.publishedAt);
       setPublicadoManualmente(resumo.publishedByAdmin);
-      alert(`Atualizacao publicada com sucesso!\nApresentacoes: ${resumo.apresentacoesPublicas}\nParcerias: ${resumo.parceriasPublicas}\nDatas: ${resumo.datasPublicas}`);
+      abrirMensagem('Atualizacao publicada com sucesso', [
+        `Apresentacoes: ${resumo.apresentacoesPublicas}`,
+        `Parcerias: ${resumo.parceriasPublicas}`,
+        `Datas: ${resumo.datasPublicas}`
+      ]);
     } catch (error) {
       console.error('Erro ao publicar atualizacao:', error);
-      alert('Nao foi possivel publicar agora. Tente novamente.');
+      abrirMensagem('Falha ao publicar', ['Nao foi possivel publicar agora.', 'Tente novamente.'], 'error');
     } finally {
       setPublicando(false);
     }
@@ -162,10 +185,14 @@ export default function Dashboard() {
       const resumo = await carregarResumoPublico();
       setUltimaPublicacao(resumo.publishedAt);
       setPublicadoManualmente(resumo.publishedByAdmin);
-      alert(`Atualizacao retirada do ar com sucesso.\nSnapshot atual: ${resumo.apresentacoesPublicas} apresentacoes, ${resumo.parceriasPublicas} parcerias e ${resumo.datasPublicas} datas.`);
+      abrirMensagem('Atualizacao retirada do ar', [
+        `Snapshot atual: ${resumo.apresentacoesPublicas} apresentacoes`,
+        `${resumo.parceriasPublicas} parcerias`,
+        `${resumo.datasPublicas} datas`
+      ]);
     } catch (error) {
       console.error('Erro ao tirar atualizacao do ar:', error);
-      alert('Nao foi possivel tirar a atualizacao do ar agora.');
+      abrirMensagem('Falha ao remover do ar', ['Nao foi possivel concluir a operacao agora.', 'Tente novamente.'], 'error');
     } finally {
       setConfirmDialog({ isOpen: false, type: null });
       setPublicando(false);
@@ -242,7 +269,7 @@ export default function Dashboard() {
 
   const confirmarDeleteApresentacao = () => {
     setConfirmDialog({ isOpen: false, type: null });
-    alert('Apresentação deletada!');
+    abrirMensagem('Apresentacao removida', ['A apresentacao foi deletada com sucesso.']);
   };
 
   const apresentacaoAtual = apresentacoes[slideAtivo];
@@ -422,6 +449,34 @@ export default function Dashboard() {
           <h3>Dica do Dia</h3>
           <p>Ao atualizar as imagens do carrossel aqui no painel, o destaque principal da Home muda automaticamente no frontend.</p>
         </div>
+      </div>
+
+      <div
+        className={`message-overlay ${messageDialog.isOpen ? 'open' : ''} ${messageDialog.variant}`}
+        aria-hidden={!messageDialog.isOpen}
+        onClick={fecharMensagem}
+      >
+        {messageDialog.isOpen && (
+          <div
+            className="message-box"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="message-title"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="message-orbit" aria-hidden="true" />
+            <p className="message-kicker">FETEG Teatro</p>
+            <h3 id="message-title">{messageDialog.title}</h3>
+            <div className="message-lines">
+              {messageDialog.lines.map((line, index) => (
+                <p key={index}>{line}</p>
+              ))}
+            </div>
+            <button type="button" className="message-ok" onClick={fecharMensagem}>
+              OK
+            </button>
+          </div>
+        )}
       </div>
 
       <ConfirmDialog
