@@ -52,7 +52,11 @@ export default function Details() {
         }
         const dados = await resposta.json();
         const lista = Array.isArray(dados.apresentacoes) ? dados.apresentacoes : [];
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(lista));
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(lista));
+        } catch (storageError) {
+          console.warn('Nao foi possivel salvar cache local das apresentacoes:', storageError);
+        }
         const item = lista.find((ap) => String(ap.id) === String(id));
         setShow(item || null);
         

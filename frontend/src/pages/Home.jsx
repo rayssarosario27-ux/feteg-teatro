@@ -65,9 +65,13 @@ export default function Home() {
         setParcerias(parceriasPublicas);
         setDatasFestival(datasPublicas);
 
-        localStorage.setItem(AP_STORAGE_KEY, JSON.stringify(apresentacoesPublicas));
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(parceriasPublicas));
-        localStorage.setItem(DATAS_STORAGE_KEY, JSON.stringify(datasPublicas));
+        try {
+          localStorage.setItem(AP_STORAGE_KEY, JSON.stringify(apresentacoesPublicas));
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(parceriasPublicas));
+          localStorage.setItem(DATAS_STORAGE_KEY, JSON.stringify(datasPublicas));
+        } catch (storageError) {
+          console.warn('Nao foi possivel salvar cache local do conteudo publicado:', storageError);
+        }
 
       } catch (error) {
         console.error('Erro ao carregar conteudo publicado:', error);
