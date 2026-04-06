@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
   // Função para forçar atualização dos dados e limpar cache local
   const handleAtualizar = async () => {
     localStorage.removeItem(AP_STORAGE_KEY);
@@ -74,6 +75,25 @@ export default function Home() {
   useEffect(() => {
     setApresentacoes(carregarListaCache(AP_STORAGE_KEY));
   }, []);
+
+  // Checagem automática: se a API retornar site vazio, redireciona para Offline
+  useEffect(() => {
+    const checarSiteOnline = async () => {
+      try {
+        const resposta = await fetch(`${API_URL}/api/publico?ts=${Date.now()}`, { cache: 'no-store' });
+        if (!resposta.ok) return;
+        const dados = await resposta.json();
+        if (Array.isArray(dados.apresentacoes) && dados.apresentacoes.length === 0) {
+          // Limpa cache e redireciona para offline
+          localStorage.removeItem(AP_STORAGE_KEY);
+          localStorage.removeItem(STORAGE_KEY);
+          localStorage.removeItem(DATAS_STORAGE_KEY);
+          navigate('/offline', { replace: true });
+        }
+      } catch {}
+    };
+    checarSiteOnline();
+  }, [API_URL, navigate]);
 
   // Atualiza do servidor em background, mas nunca trava a tela ao voltar
   useEffect(() => {
