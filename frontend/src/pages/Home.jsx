@@ -23,6 +23,7 @@ export default function Home() {
     }
   };
 
+  // Sempre tenta carregar do cache local primeiro para navegação instantânea
   const [apresentacoes, setApresentacoes] = useState(() => carregarListaCache(AP_STORAGE_KEY));
 
   const [indiceCarousel, setIndiceCarousel] = useState(0);
@@ -43,54 +44,40 @@ export default function Home() {
     return () => clearInterval(interval);
   }, [apresentacoes.length]);
 
+  // Atualiza do servidor em background, mas nunca trava a tela ao voltar
   useEffect(() => {
+    let cancelado = false;
     const carregarConteudoPublicado = async () => {
       try {
         const resposta = await fetch(`${API_URL}/api/publico?ts=${Date.now()}`, { cache: 'no-store' });
-        if (!resposta.ok) {
-          throw new Error(`Falha API: ${resposta.status}`);
-        }
-
+        if (!resposta.ok) throw new Error(`Falha API: ${resposta.status}`);
         const dados = await resposta.json();
         const apresentacoesPublicas = Array.isArray(dados.apresentacoes) ? dados.apresentacoes : [];
         const parceriasPublicas = Array.isArray(dados.parcerias) ? dados.parcerias : [];
         const datasPublicas = Array.isArray(dados.datas) ? dados.datas : [];
-
-        setApresentacoes(apresentacoesPublicas);
-        setParcerias(parceriasPublicas);
-        setDatasFestival(datasPublicas);
-
-        try {
-          localStorage.setItem(AP_STORAGE_KEY, JSON.stringify(apresentacoesPublicas));
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(parceriasPublicas));
-          localStorage.setItem(DATAS_STORAGE_KEY, JSON.stringify(datasPublicas));
-        } catch (storageError) {
-          console.warn('Nao foi possivel salvar cache local do conteudo publicado:', storageError);
+        // Só sobrescreve o cache se a lista da API for maior ou igual à do cache
+        const cacheAtual = carregarListaCache(AP_STORAGE_KEY);
+        if (!cancelado) {
+          setApresentacoes(apresentacoesPublicas.length >= cacheAtual.length ? apresentacoesPublicas : cacheAtual);
+          setParcerias(parceriasPublicas);
+          setDatasFestival(datasPublicas);
         }
-
+        if (apresentacoesPublicas.length >= cacheAtual.length) {
+          try {
+            localStorage.setItem(AP_STORAGE_KEY, JSON.stringify(apresentacoesPublicas));
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(parceriasPublicas));
+            localStorage.setItem(DATAS_STORAGE_KEY, JSON.stringify(datasPublicas));
+          } catch (storageError) {
+            console.warn('Nao foi possivel salvar cache local do conteudo publicado:', storageError);
+          }
+        }
       } catch (error) {
         console.error('Erro ao carregar conteudo publicado:', error);
-        try {
-          const apLocal = localStorage.getItem(AP_STORAGE_KEY);
-          const parcLocal = localStorage.getItem(STORAGE_KEY);
-          const datasLocal = localStorage.getItem(DATAS_STORAGE_KEY);
-
-          const apDados = apLocal ? JSON.parse(apLocal) : [];
-          const parcDados = parcLocal ? JSON.parse(parcLocal) : [];
-          const datasDados = datasLocal ? JSON.parse(datasLocal) : [];
-
-          setApresentacoes(Array.isArray(apDados) ? apDados : []);
-          setParcerias(Array.isArray(parcDados) ? parcDados : []);
-          setDatasFestival(Array.isArray(datasDados) ? datasDados : []);
-        } catch {
-          setApresentacoes([]);
-          setParcerias([]);
-          setDatasFestival([]);
-        }
+        // Não limpa o cache local, só mostra o que já tem
       }
     };
-
     carregarConteudoPublicado();
+    return () => { cancelado = true; };
   }, [API_URL]);
 
   const handlePrev = () => {
