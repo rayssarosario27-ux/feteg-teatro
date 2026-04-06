@@ -233,6 +233,7 @@ export default function Home() {
           alt={apresentacaoAtual.nome}
           className="carousel-img"
           style={{ objectPosition: getPosicaoImagemCarousel() }}
+          loading="lazy"
         />
         <div className="carousel-overlay"></div>
 
@@ -303,6 +304,7 @@ export default function Home() {
                     alt={item.nome}
                     className="card-img"
                     style={{ objectPosition: getPosicaoImagemCard(item) }}
+                    loading="lazy"
                   />
                   <span className="card-number">{idx + 1}</span>
                   <span className="card-classificacao">{item.classificacao}</span>
