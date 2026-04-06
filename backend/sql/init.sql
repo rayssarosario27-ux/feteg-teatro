@@ -15,6 +15,7 @@ CREATE TABLE IF NOT EXISTS apresentacoes (
   data_inicio TEXT DEFAULT '',
   data_fim TEXT DEFAULT '',
   imagem_card TEXT,
+  imagem_card_posicao TEXT DEFAULT '50% 50%',
   imagem_carousel TEXT,
   imagem_carousel_posicao TEXT DEFAULT '50% 50%',
   views_count INTEGER DEFAULT 0,
@@ -26,6 +27,16 @@ CREATE TABLE IF NOT EXISTS parcerias (
   id SERIAL PRIMARY KEY,
   nome TEXT NOT NULL,
   tipo TEXT NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS datas_festival (
+  id SERIAL PRIMARY KEY,
+  data TEXT NOT NULL,
+  evento TEXT NOT NULL,
+  local TEXT NOT NULL,
+  dia TEXT DEFAULT '',
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
@@ -56,6 +67,12 @@ EXECUTE FUNCTION set_updated_at();
 DROP TRIGGER IF EXISTS set_parcerias_updated_at ON parcerias;
 CREATE TRIGGER set_parcerias_updated_at
 BEFORE UPDATE ON parcerias
+FOR EACH ROW
+EXECUTE FUNCTION set_updated_at();
+
+DROP TRIGGER IF EXISTS set_datas_festival_updated_at ON datas_festival;
+CREATE TRIGGER set_datas_festival_updated_at
+BEFORE UPDATE ON datas_festival
 FOR EACH ROW
 EXECUTE FUNCTION set_updated_at();
 

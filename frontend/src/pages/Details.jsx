@@ -23,20 +23,6 @@ export default function Details() {
       return;
     }
 
-    const ultimoClique = (() => {
-      try {
-        const bruto = sessionStorage.getItem('feteg_last_view_click');
-        return bruto ? JSON.parse(bruto) : null;
-      } catch {
-        return null;
-      }
-    })();
-
-    const foiContadoNoClique =
-      ultimoClique &&
-      String(ultimoClique.id) === String(id) &&
-      Date.now() - Number(ultimoClique.at || 0) < 4000;
-
     const fallback = () => {
       try {
         const local = localStorage.getItem(STORAGE_KEY);
@@ -62,14 +48,6 @@ export default function Details() {
         }
         const dados = await resposta.json();
         setShow(dados || null);
-        
-        // Incrementar visualizações apenas quando o clique ainda nao foi contado no card
-        if (dados && dados.id && !foiContadoNoClique) {
-          fetch(`${API_URL}/api/apresentacoes/${dados.id}/view`, {
-            method: 'POST',
-            cache: 'no-store'
-          }).catch((err) => console.error('Erro ao registrar visualização:', err));
-        }
       } catch (error) {
         console.error('Erro ao carregar detalhes da apresentacao:', error);
         fallback();

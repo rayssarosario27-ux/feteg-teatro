@@ -539,28 +539,6 @@ app.delete('/api/apresentacoes/:id', async (req, res) => {
   }
 });
 
-// Incrementar visualizações
-app.post('/api/apresentacoes/:id/view', async (req, res) => {
-  const id = Number(req.params.id);
-  if (!Number.isInteger(id)) {
-    return res.status(400).json({ erro: 'id invalido' });
-  }
-
-  try {
-    const result = await pool.query(
-      'UPDATE apresentacoes SET views_count = views_count + 1 WHERE id = $1 RETURNING views_count',
-      [id]
-    );
-    if (result.rowCount === 0) {
-      return res.status(404).json({ erro: 'apresentacao nao encontrada' });
-    }
-    return res.json({ viewsCount: result.rows[0].views_count });
-  } catch (error) {
-    console.error('Erro ao incrementar visualizacoes:', error);
-    return res.status(500).json({ erro: 'falha ao incrementar visualizacoes' });
-  }
-});
-
 app.get('/api/parcerias', async (req, res) => {
   try {
     const result = await pool.query('SELECT id, nome, tipo FROM parcerias ORDER BY id');
@@ -724,13 +702,19 @@ app.delete('/api/datas/:id', async (req, res) => {
   }
 });
 
-initDb()
-  .then(() => {
+const shouldInitDb = process.env.INIT_DB === 'true';
+
+(async () => {
+  try {
+    if (shouldInitDb) {
+      await initDb();
+    }
+
     app.listen(PORT, () => {
       console.log(`🎭 Servidor FETEG rodando na porta ${PORT}`);
     });
-  })
-  .catch((error) => {
-    console.error('Falha ao iniciar banco de dados:', error);
+  } catch (error) {
+    console.error('Falha ao iniciar:', error);
     process.exit(1);
-  });
+  }
+})();

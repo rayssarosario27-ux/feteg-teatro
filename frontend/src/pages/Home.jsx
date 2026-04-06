@@ -32,21 +32,6 @@ export default function Home() {
   const [datasFestival, setDatasFestival] = useState(() => carregarListaCache(DATAS_STORAGE_KEY));
   const cardsSectionRef = useRef(null);
 
-  const registrarVisualizacao = (apresentacaoId) => {
-    if (!apresentacaoId) return;
-
-    sessionStorage.setItem('feteg_last_view_click', JSON.stringify({
-      id: String(apresentacaoId),
-      at: Date.now()
-    }));
-
-    fetch(`${API_URL}/api/apresentacoes/${apresentacaoId}/view`, {
-      method: 'POST',
-      cache: 'no-store',
-      keepalive: true
-    }).catch((err) => console.error('Erro ao registrar visualizacao:', err));
-  };
-
   // Auto-play carousel
   useEffect(() => {
     if (apresentacoes.length === 0) return;
@@ -138,7 +123,6 @@ export default function Home() {
 
   const handleSaibaMais = () => {
     if (!apresentacaoAtual) return;
-    registrarVisualizacao(apresentacaoAtual.id);
     navigate(`/detalhes/${apresentacaoAtual.id}`, { state: { apresentacao: apresentacaoAtual } });
   };
 
@@ -320,7 +304,6 @@ export default function Home() {
                 state={{ apresentacao: item }}
                 key={item.id}
                 className="card"
-                onClick={() => registrarVisualizacao(item.id)}
               >
                 <div className="card-image-wrapper">
                   <img

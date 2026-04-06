@@ -81,8 +81,7 @@ function mapApresentacao(row) {
     imagemCard: row.imagem_card,
     imagemCardPosicao: row.imagem_card_posicao || '50% 50%',
     imagemCarousel: row.imagem_carousel,
-    imagemCarouselPosicao: row.imagem_carousel_posicao || '50% 50%',
-    viewsCount: row.views_count || 0
+    imagemCarouselPosicao: row.imagem_carousel_posicao || '50% 50%'
   };
 }
 

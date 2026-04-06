@@ -10,7 +10,6 @@ export default function Dashboard() {
   const [apresentacoes, setApresentacoes] = useState([]);
   const [datas, setDatas] = useState([]);
   const [parcerias, setParcerias] = useState([]);
-  const [totalVisualizacoes, setTotalVisualizacoes] = useState(0);
   const [slideAtivo, setSlideAtivo] = useState(0);
   const [publicando, setPublicando] = useState(false);
   const [ultimaPublicacao, setUltimaPublicacao] = useState(null);
@@ -69,13 +68,9 @@ export default function Dashboard() {
         if (slideAtivo >= lista.length) {
           setSlideAtivo(0);
         }
-        // Calcular total de visualizações
-        const totalViews = lista.reduce((sum, ap) => sum + (ap.viewsCount || 0), 0);
-        setTotalVisualizacoes(totalViews);
       } catch (error) {
         console.error('Erro ao carregar apresentacoes:', error);
         setApresentacoes([]);
-        setTotalVisualizacoes(0);
       }
     };
 
@@ -339,15 +334,6 @@ export default function Dashboard() {
           <div className="stat-card-arrow">→</div>
         </div>
 
-        <div className="stat-card">
-          <div className="stat-card-icon">👁️</div>
-          <div className="stat-card-body">
-            <p className="stat-label">Visualizações</p>
-            <h3 className="stat-value">{totalVisualizacoes}</h3>
-            <span className="stat-desc">total de clicks</span>
-          </div>
-          <div className="stat-card-arrow">→</div>
-        </div>
       </div>
 
       <section className="carousel-admin-section">
