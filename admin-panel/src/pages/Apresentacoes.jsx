@@ -29,7 +29,8 @@ export default function Apresentacoes() {
   useEffect(() => {
     const carregarApresentacoes = async () => {
       try {
-        const resposta = await fetch(`${API_URL}/api/apresentacoes`);
+        // Busca igual ao Dashboard, sem filtros extras
+        const resposta = await fetch(`${API_URL}/api/apresentacoes`, { cache: 'no-store' });
         if (!resposta.ok) {
           throw new Error(`Falha API: ${resposta.status}`);
         }
@@ -40,7 +41,6 @@ export default function Apresentacoes() {
         setApresentacoes([]);
       }
     };
-
     carregarApresentacoes();
   }, [API_URL]);
 
