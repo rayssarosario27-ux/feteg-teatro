@@ -19,20 +19,39 @@ const corsOrigin = process.env.CORS_ORIGIN
 
 const localhostOriginPattern = /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/;
 
-// Middleware
+// Middleware CORS
 app.use(cors({
   origin(origin, callback) {
     if (!origin) {
       return callback(null, true);
     }
-
     if (corsOrigin.includes(origin) || localhostOriginPattern.test(origin)) {
       return callback(null, true);
     }
-
     return callback(new Error('CORS nao permitido para esta origem'));
-  }
+  },
+  credentials: true,
 }));
+// Fallback manual para garantir headers em serverless (Vercel)
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  if (
+    !origin ||
+    corsOrigin.includes(origin) ||
+    localhostOriginPattern.test(origin)
+  ) {
+    res.setHeader('Access-Control-Allow-Origin', origin || '*');
+    res.setHeader('Vary', 'Origin');
+    res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+  }
+  if (req.method === 'OPTIONS') {
+    res.status(200).end();
+    return;
+  }
+  next();
+});
 app.use(express.json({ limit: '25mb' }));
 app.use(express.urlencoded({ extended: true, limit: '25mb' }));
 
