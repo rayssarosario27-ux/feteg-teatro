@@ -1,31 +1,4 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
-  // Função para forçar atualização dos dados e limpar cache local
-  const handleAtualizar = async () => {
-    localStorage.removeItem(AP_STORAGE_KEY);
-    localStorage.removeItem(STORAGE_KEY);
-    localStorage.removeItem(DATAS_STORAGE_KEY);
-    setApresentacoes([]);
-    setParcerias([]);
-    setDatasFestival([]);
-    // Força recarregar da API
-    try {
-      const resposta = await fetch(`${API_URL}/api/publico?ts=${Date.now()}`, { cache: 'no-store' });
-      if (!resposta.ok) throw new Error(`Falha API: ${resposta.status}`);
-      const dados = await resposta.json();
-      const apresentacoesPublicas = Array.isArray(dados.apresentacoes) ? dados.apresentacoes : [];
-      const parceriasPublicas = Array.isArray(dados.parcerias) ? dados.parcerias : [];
-      const datasPublicas = Array.isArray(dados.datas) ? dados.datas : [];
-      setApresentacoes(apresentacoesPublicas);
-      setParcerias(parceriasPublicas);
-      setDatasFestival(datasPublicas);
-      try {
-        localStorage.setItem(AP_STORAGE_KEY, JSON.stringify(apresentacoesPublicas));
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(parceriasPublicas));
-        localStorage.setItem(DATAS_STORAGE_KEY, JSON.stringify(datasPublicas));
-      } catch {}
-    } catch {}
-  };
 import { Link, useNavigate } from 'react-router-dom';
 import { FaInstagram } from 'react-icons/fa';
 import { getApiBaseUrl } from '../utils/api';
