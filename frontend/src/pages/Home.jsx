@@ -12,6 +12,7 @@ export default function Home() {
   const AP_STORAGE_KEY = 'feteg_apresentacoes';
   const DATAS_STORAGE_KEY = 'feteg_datas';
   const anoAtual = new Date().getFullYear();
+  const [loading, setLoading] = useState(true);
 
   const carregarListaCache = (chave) => {
     try {
@@ -54,7 +55,7 @@ export default function Home() {
     const checarSiteOnline = async () => {
       try {
         const resposta = await fetch(`${API_URL}/api/publico?ts=${Date.now()}`, { cache: 'no-store' });
-        if (!resposta.ok) return;
+        if (!resposta.ok) { setLoading(false); return; }
         const dados = await resposta.json();
         if (Array.isArray(dados.apresentacoes) && dados.apresentacoes.length === 0) {
           // Limpa cache e redireciona para offline
@@ -62,8 +63,10 @@ export default function Home() {
           localStorage.removeItem(STORAGE_KEY);
           localStorage.removeItem(DATAS_STORAGE_KEY);
           navigate('/offline', { replace: true });
+        } else {
+          setLoading(false);
         }
-      } catch {}
+      } catch { setLoading(false); }
     };
     checarSiteOnline();
   }, [API_URL, navigate]);
@@ -163,6 +166,17 @@ export default function Home() {
     }
   };
 
+  if (loading) {
+    return (
+      <main className="home-empty" aria-live="polite">
+        <div className="empty-glow empty-glow-left" />
+        <div className="empty-glow empty-glow-right" />
+        <section className="empty-stage">
+          <h1>Carregando...</h1>
+        </section>
+      </main>
+    );
+  }
   if (apresentacoes.length === 0 || !apresentacaoAtual) {
     return (
       <main className="home-empty" aria-live="polite">
