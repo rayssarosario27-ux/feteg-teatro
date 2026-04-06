@@ -24,7 +24,7 @@ export default function Home() {
   };
 
   // Sempre tenta carregar do cache local primeiro para navegação instantânea
-  const [apresentacoes, setApresentacoes] = useState(() => carregarListaCache(AP_STORAGE_KEY));
+  const [apresentacoes, setApresentacoes] = useState([]);
 
   const [indiceCarousel, setIndiceCarousel] = useState(0);
   const [pesquisa, setPesquisa] = useState('');
@@ -43,6 +43,11 @@ export default function Home() {
 
     return () => clearInterval(interval);
   }, [apresentacoes.length]);
+
+  // Sempre recarrega do localStorage ao montar (inclusive ao voltar do Details)
+  useEffect(() => {
+    setApresentacoes(carregarListaCache(AP_STORAGE_KEY));
+  }, []);
 
   // Atualiza do servidor em background, mas nunca trava a tela ao voltar
   useEffect(() => {
