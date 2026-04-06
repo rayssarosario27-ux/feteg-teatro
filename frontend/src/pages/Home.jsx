@@ -201,6 +201,10 @@ export default function Home() {
     return item.imagemCardPosicao || '50% 50%';
   };
 
+  // Paginação simples: mostra 6 cards e carrega mais sob demanda
+  const [cardsVisiveis, setCardsVisiveis] = useState(6);
+  const handleVerMais = () => setCardsVisiveis((prev) => prev + 6);
+
   return (
     <div className="home">
       {/* HEADER */}
@@ -291,35 +295,42 @@ export default function Home() {
         <h2>Em Cartaz</h2>
         <div className="cards-container">
           {apresentacoesFiltradas.length > 0 ? (
-            apresentacoesFiltradas.map((item, idx) => (
-              <Link
-                to={`/detalhes/${item.id}`}
-                state={{ apresentacao: item }}
-                key={item.id}
-                className="card"
-              >
-                <div className="card-image-wrapper">
-                  <img
-                    src={getImagemCard(item)}
-                    alt={item.nome}
-                    className="card-img"
-                    style={{ objectPosition: getPosicaoImagemCard(item) }}
-                    loading="lazy"
-                  />
-                  <span className="card-number">{idx + 1}</span>
-                  <span className="card-classificacao">{item.classificacao}</span>
-                </div>
-                <div className="card-content">
-                  <h3>{item.nome}</h3>
-                  <p className="card-genre">{item.genero}</p>
-                  <div className="card-meta">
-                    <span>{item.duracao} min</span>
-                    <span>{item.local}</span>
+            <>
+              {apresentacoesFiltradas.slice(0, cardsVisiveis).map((item, idx) => (
+                <Link
+                  to={`/detalhes/${item.id}`}
+                  state={{ apresentacao: item }}
+                  key={item.id}
+                  className="card"
+                >
+                  <div className="card-image-wrapper">
+                    <img
+                      src={getImagemCard(item)}
+                      alt={item.nome}
+                      className="card-img"
+                      style={{ objectPosition: getPosicaoImagemCard(item) }}
+                      loading="lazy"
+                    />
+                    <span className="card-number">{idx + 1}</span>
+                    <span className="card-classificacao">{item.classificacao}</span>
                   </div>
-                  <p className="card-free">Entrada gratuita</p>
-                </div>
-              </Link>
-            ))
+                  <div className="card-content">
+                    <h3>{item.nome}</h3>
+                    <p className="card-genre">{item.genero}</p>
+                    <div className="card-meta">
+                      <span>{item.duracao} min</span>
+                      <span>{item.local}</span>
+                    </div>
+                    <p className="card-free">Entrada gratuita</p>
+                  </div>
+                </Link>
+              ))}
+              {cardsVisiveis < apresentacoesFiltradas.length && (
+                <button className="btn-ver-mais" onClick={handleVerMais} style={{margin:'32px auto',display:'block'}}>
+                  Ver mais
+                </button>
+              )}
+            </>
           ) : (
             <p className="cards-empty">
               Nenhuma apresentação encontrada para esta data.
