@@ -20,6 +20,8 @@ export default function Home() {
   }
   const navigate = useNavigate();
   const API_URL = getApiBaseUrl();
+  // LOG: Mostra a URL da API usada
+  console.log('FETEG DEBUG - API_URL:', API_URL);
   const STORAGE_KEY = 'feteg_parcerias';
   const AP_STORAGE_KEY = 'feteg_apresentacoes';
   const DATAS_STORAGE_KEY = 'feteg_datas';
@@ -68,9 +70,13 @@ export default function Home() {
     let timeoutId;
     const checarSiteOnline = async () => {
       try {
-        const resposta = await fetch(`${API_URL}/api/publico?ts=${Date.now()}`, { cache: 'no-store' });
+        const url = `${API_URL}/api/publico?ts=${Date.now()}`;
+        console.log('FETEG DEBUG - Fetching:', url);
+        const resposta = await fetch(url, { cache: 'no-store' });
+        console.log('FETEG DEBUG - Status:', resposta.status);
         if (!resposta.ok) { setErro('Erro ao acessar a API.'); setLoading(false); return; }
         const dados = await resposta.json();
+        console.log('FETEG DEBUG - Dados recebidos:', dados);
         if (Array.isArray(dados.apresentacoes) && dados.apresentacoes.length === 0) {
           // Limpa cache e redireciona para offline
           localStorage.removeItem(AP_STORAGE_KEY);
@@ -83,7 +89,7 @@ export default function Home() {
           setLoading(false);
         }
       } catch (e) {
-        console.error('Erro ao acessar a API:', e);
+        console.error('FETEG DEBUG - Erro ao acessar a API:', e);
         setErro('Erro ao acessar a API.');
         setLoading(false);
       }
