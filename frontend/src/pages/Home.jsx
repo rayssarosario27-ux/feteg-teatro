@@ -13,6 +13,7 @@ export default function Home() {
   const DATAS_STORAGE_KEY = 'feteg_datas';
   const anoAtual = new Date().getFullYear();
   const [loading, setLoading] = useState(true);
+  const [erro, setErro] = useState(null);
 
   const carregarListaCache = (chave) => {
     try {
@@ -52,23 +53,36 @@ export default function Home() {
 
   // Checagem automática: se a API retornar site vazio, redireciona para Offline
   useEffect(() => {
+    let timeoutId;
     const checarSiteOnline = async () => {
       try {
         const resposta = await fetch(`${API_URL}/api/publico?ts=${Date.now()}`, { cache: 'no-store' });
-        if (!resposta.ok) { setLoading(false); return; }
+        if (!resposta.ok) { setErro('Erro ao acessar a API.'); setLoading(false); return; }
         const dados = await resposta.json();
         if (Array.isArray(dados.apresentacoes) && dados.apresentacoes.length === 0) {
           // Limpa cache e redireciona para offline
           localStorage.removeItem(AP_STORAGE_KEY);
           localStorage.removeItem(STORAGE_KEY);
           localStorage.removeItem(DATAS_STORAGE_KEY);
+          console.log('Redirecionando para /offline (site vazio)');
+          setLoading(false);
           navigate('/offline', { replace: true });
         } else {
           setLoading(false);
         }
-      } catch { setLoading(false); }
+      } catch (e) {
+        console.error('Erro ao acessar a API:', e);
+        setErro('Erro ao acessar a API.');
+        setLoading(false);
+      }
     };
     checarSiteOnline();
+    // Fallback: nunca ficar loading mais de 8s
+    timeoutId = setTimeout(() => {
+      setLoading(false);
+      setErro('Tempo de resposta excedido. Verifique sua conexão ou tente novamente.');
+    }, 8000);
+    return () => clearTimeout(timeoutId);
   }, [API_URL, navigate]);
 
   // Atualiza do servidor em background, mas nunca trava a tela ao voltar
@@ -173,6 +187,19 @@ export default function Home() {
         <div className="empty-glow empty-glow-right" />
         <section className="empty-stage">
           <h1>Carregando...</h1>
+        </section>
+      </main>
+    );
+  }
+  if (erro) {
+    return (
+      <main className="home-empty" aria-live="polite">
+        <div className="empty-glow empty-glow-left" />
+        <div className="empty-glow empty-glow-right" />
+        <section className="empty-stage">
+          <h1>Erro ao carregar o site</h1>
+          <p>{erro}</p>
+          <button onClick={() => window.location.reload()} className="empty-btn">Tentar novamente</button>
         </section>
       </main>
     );
@@ -380,12 +407,12 @@ export default function Home() {
         <div className="partners-grid">
           {parcerias.length > 0 ? (
             parcerias.map((parceria) => (
-              <article key={parceria.id} className="partner-card">
-                <span className={`partner-tag ${parceria.tipo.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')}`}>
-                  {parceria.tipo}
-                </span>
-                <h3>{parceria.nome}</h3>
-              </article>
+                <article key={parceria && parceria.id ? parceria.id : idx} className="partner-card">
+                  <span className={`partner-tag ${parceria && parceria.tipo ? parceria.tipo.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '') : ''}`}>
+                    {parceria && parceria.tipo ? parceria.tipo : 'Parceria'}
+                  </span>
+                  <h3>{parceria && parceria.nome ? parceria.nome : 'Instituição'}</h3>
+                </article>
             ))
           ) : (
             <p className="partners-empty">Nenhuma parceria cadastrada no momento.</p>

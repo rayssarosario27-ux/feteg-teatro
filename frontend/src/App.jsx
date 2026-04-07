@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom'
 import Home from './pages/Home'
 import Details from './pages/Details'
+import Offline from './pages/Offline'
 
 function ScrollToTop() {
   const location = useLocation()
@@ -24,6 +25,8 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/detalhes/:id" element={<Details />} />
+        {/* Rota para tela de espera artística */}
+        <Route path="/offline" element={<Offline />} />
       </Routes>
     </Router>
   )
