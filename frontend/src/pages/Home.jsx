@@ -127,7 +127,12 @@ export default function Home() {
             localStorage.setItem(STORAGE_KEY, JSON.stringify(parceriasPublicas));
             localStorage.setItem(DATAS_STORAGE_KEY, JSON.stringify(datasPublicas));
           } catch (storageError) {
-            console.warn('Nao foi possivel salvar cache local do conteudo publicado:', storageError);
+            // Se quota excedida, apenas avisa e segue normalmente
+            if (storageError.name === 'QuotaExceededError') {
+              console.warn('Quota do localStorage excedida. Cache ignorado.');
+            } else {
+              console.warn('Nao foi possivel salvar cache local do conteudo publicado:', storageError);
+            }
           }
         }
       } catch (error) {
