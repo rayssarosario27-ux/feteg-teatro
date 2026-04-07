@@ -100,7 +100,7 @@ export default function Details() {
               <h1>FETEG Teatro</h1>
             </div>
           </div>
-          <input type="text" placeholder="Buscar apresentacao" className="search" />
+          <input type="text" placeholder="Buscar apresentacao" className="search" name="search" id="search" />
         </div>
         <nav className="nav">
           <a href="/">Programacao</a>
