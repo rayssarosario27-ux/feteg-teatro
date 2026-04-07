@@ -1,4 +1,8 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
+
+// DEBUG: Diagnóstico de renderização
+console.log('DEBUG: Home.jsx está sendo executado');
+
 import { Link, useNavigate } from 'react-router-dom';
 import { FaInstagram } from 'react-icons/fa';
 import { getApiBaseUrl } from '../utils/api';
@@ -6,6 +10,10 @@ import '../styles/Home.css';
 import logo from '../assets/logo.png';
 
 export default function Home() {
+  // DEBUG: Diagnóstico de renderização
+  if (typeof window !== 'undefined') {
+    window.__FETEG_DEBUG = true;
+  }
   const navigate = useNavigate();
   const API_URL = getApiBaseUrl();
   const STORAGE_KEY = 'feteg_parcerias';
@@ -187,6 +195,7 @@ export default function Home() {
         <div className="empty-glow empty-glow-right" />
         <section className="empty-stage">
           <h1>Carregando...</h1>
+          <p style={{color:'red',fontWeight:'bold'}}>DEBUG: Render carregando ativo</p>
         </section>
       </main>
     );
@@ -199,6 +208,7 @@ export default function Home() {
         <section className="empty-stage">
           <h1>Erro ao carregar o site</h1>
           <p>{erro}</p>
+          <p style={{color:'red',fontWeight:'bold'}}>DEBUG: Render erro ativo</p>
           <button onClick={() => window.location.reload()} className="empty-btn">Tentar novamente</button>
         </section>
       </main>
@@ -216,6 +226,7 @@ export default function Home() {
           <p className="empty-subtitle">
             A próxima programação ainda está sendo preparada. Em breve, você verá aqui as peças, datas e destaques do festival.
           </p>
+          <p style={{color:'red',fontWeight:'bold'}}>DEBUG: Render novidades em breve ativo</p>
 
           <div className="empty-actions">
             <button type="button" className="empty-btn" onClick={() => window.location.reload()}>
