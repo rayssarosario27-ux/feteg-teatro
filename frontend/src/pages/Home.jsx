@@ -1,3 +1,7 @@
+// Função para atualizar a página (corrige ReferenceError)
+function handleAtualizar() {
+  window.location.reload();
+}
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 
 // DEBUG: Diagnóstico de renderização
