@@ -1,7 +1,3 @@
-// Função para atualizar a página (corrige ReferenceError)
-function handleAtualizar() {
-  window.location.reload();
-}
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 
 // DEBUG: Diagnóstico de renderização
@@ -224,7 +220,7 @@ export default function Home() {
           <h1>Erro ao carregar o site</h1>
           <p>{erro}</p>
           <p style={{color:'red',fontWeight:'bold'}}>DEBUG: Render erro ativo</p>
-          <button onClick={() => window.location.reload()} className="empty-btn">Tentar novamente</button>
+          {/* <button onClick={() => window.location.reload()} className="empty-btn">Tentar novamente</button> */}
         </section>
       </main>
     );
@@ -244,9 +240,6 @@ export default function Home() {
           <p style={{color:'red',fontWeight:'bold'}}>DEBUG: Render novidades em breve ativo</p>
 
           <div className="empty-actions">
-            <button type="button" className="empty-btn" onClick={() => window.location.reload()}>
-              Atualizar página
-            </button>
             <a className="empty-link" href="https://instagram.com/fetegguaranesiaoficial" target="_blank" rel="noopener noreferrer">
               Acompanhar no Instagram
             </a>
@@ -290,14 +283,6 @@ export default function Home() {
 
   return (
     <div className="home">
-      {/* BOTÃO ATUALIZAR FIXO */}
-      <button
-        className="btn-atualizar"
-        style={{position:'fixed',top:10,right:10,zIndex:1000,padding:'10px 18px',background:'#ff6b00',color:'#fff',border:'none',borderRadius:8,fontWeight:'bold',boxShadow:'0 2px 8px #0002'}}
-        onClick={handleAtualizar}
-      >
-        Atualizar
-      </button>
 
       {/* HEADER */}
       <header className="header">

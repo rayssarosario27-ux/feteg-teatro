@@ -134,8 +134,15 @@ export default function Dashboard() {
   const handlePublicarAtualizacao = async () => {
     setPublicando(true);
     try {
+      const payload = {
+        apresentacoes,
+        parcerias,
+        datas
+      };
       const resposta = await fetch(`${API_URL}/api/publicar-site`, {
         method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
         cache: 'no-store'
       });
 

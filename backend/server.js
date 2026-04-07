@@ -339,11 +339,24 @@ app.get('/api/publico', async (req, res) => {
 
 app.post('/api/publicar-site', async (req, res) => {
   try {
-    const publicado = await publicarSite();
+    // Força uso do payload enviado pelo admin
+    const payload = req.body && Object.keys(req.body).length > 0
+      ? req.body
+      : getEmptyPublicPayload();
+
+    const result = await pool.query(
+      `INSERT INTO public_site_snapshot (id, payload, published_at, published_by_admin)
+       VALUES (1, $1::jsonb, NOW(), TRUE)
+       ON CONFLICT (id)
+       DO UPDATE SET payload = EXCLUDED.payload, published_at = NOW(), published_by_admin = TRUE
+       RETURNING id, payload, published_at, published_by_admin`,
+      [JSON.stringify(payload)]
+    );
+
     return res.json({
       mensagem: 'Atualizacao publicada com sucesso',
-      publishedAt: publicado.published_at,
-      publishedByAdmin: Boolean(publicado.published_by_admin)
+      publishedAt: result.rows[0].published_at,
+      publishedByAdmin: Boolean(result.rows[0].published_by_admin)
     });
   } catch (error) {
     console.error('Erro ao publicar site:', error);
